@@ -1,6 +1,7 @@
 <?php
 require_once 'config/database.php';
 require_once 'model/tododata.php';
+require_once 'login_verify.php';
 $db = new Database();
 $conn = $db->connect();
 $todo = new Todo($conn);
@@ -27,11 +28,33 @@ $tododones = $todo->getAll_active();
     <link rel="shortcut icon" type="image/png" href="assets/favicon.png" />
     <link rel="stylesheet" href="CSS/main.css">
     <link rel="stylesheet" href="CSS/corner.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
     <title>JUST DO IT</title>
 
 </head>
 
 <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark" style="width:100%;">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">PlanPal</a>
+    
+    <div class="collapse navbar-collapse justify-content-end">
+      <ul class="navbar-nav">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+            <?php echo htmlspecialchars($_SESSION['username'] ?? 'User'); ?>
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+            <li><a class="dropdown-item" href="#">Profile</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="logout.php">Logout</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
     <div id="header">
         <div class="flexrow-container">
             <div class="standard-theme theme-selector"></div>
@@ -101,6 +124,7 @@ $tododones = $todo->getAll_active();
     <script src="JS/main.js" type="text/javascript"> </script>
     <script src="js/jquery.min.js" type="text/javascript"> </script>
     <script src="js/jquery.validate.js" type="text/javascript"> </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script type="text/javascript">
     
