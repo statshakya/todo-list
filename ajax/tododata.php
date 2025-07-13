@@ -18,11 +18,13 @@ try {
 
         switch ($action) {
             case 'add':
-                $title = trim($_POST['title'] ?? '');
+                $title = trim(string: $_POST['title'] ?? '');
+                session_start();
+                $userid = $_SESSION['user_id'] ?? null;
                 if (strlen($title) < 2) {
                     $response = ['status' => 'error', 'message' => 'Task title must be at least 2 characters.'];
                 } else {
-                    $success = $todo->create($title);
+                    $success = $todo->create($title,$userid);
                     $response = $success
                         ? ['status' => 'success', 'message' => '✅ Task added successfully!']
                         : ['status' => 'error', 'message' => '❌ Failed to add task. Try again.'];
@@ -111,18 +113,47 @@ try {
                 $response = ['valid' => !$exists];
                 break;
 
-            case 'updateProfile':
-                $id = $_POST['id'] ?? '';
-                $name = trim($_POST['name'] ?? '');
-                $email = trim($_POST['email'] ?? '');
-                $username = trim($_POST['username'] ?? '');
-                $password = $_POST['password'] ?? '';
-                if ($user->updateProfile($id, $name, $email, $username, $password)) {
-                    $response = ['status' => 'success', 'message' => '✅ Profile updated successfully!'];
-                } else {
-                    $response = ['status' => 'error', 'message' => '❌ Failed to update profile.'];
-                }
-                break;
+            // case 'updateProfile':
+            //     $id = $_POST['id'] ?? '';
+            //     $name = trim($_POST['name'] ?? '');
+            //     $email = trim($_POST['email'] ?? '');
+            //     $username = trim($_POST['username'] ?? '');
+            //     $password = $_POST['password'] ?? '';
+            //     if ($user->updateProfile($id, $name, $email, $username, $password)) {
+            //         $response = ['status' => 'success', 'message' => '✅ Profile updated successfully!'];
+            //     } else {
+            //         $response = ['status' => 'error', 'message' => '❌ Failed to update profile.'];
+            //     }
+            //     break;
+        case 'updateProfile':
+    session_start(); // make sure session is active
+
+    $id = $_POST['id'] ?? '';
+    $name = trim($_POST['name'] ?? '');
+    $email = trim($_POST['email'] ?? '');
+    $username = trim($_POST['username'] ?? '');
+    $password = trim($_POST['password'] ?? '');
+
+
+    if (empty($password)) {
+        // No password change
+        $success = $user->updateProfileWithoutPassword($id, $name, $email, $username);
+    } else {
+        // With password change
+        $success = $user->updateProfile($id, $name, $email, $username, $password);
+    }
+
+    if ($success) {
+        // ✅ Update session values
+        $_SESSION['username'] = $username;
+        $_SESSION['email'] = $email;
+        $_SESSION['name'] = $name;
+
+        $response = ['status' => 'success', 'message' => '✅ Profile updated successfully!'];
+    } else {
+        $response = ['status' => 'error', 'message' => '❌ Failed to update profile.'];
+    }
+    break;
 
             default:
                 $response = ['status' => 'error', 'message' => '❌ Unknown action.'];

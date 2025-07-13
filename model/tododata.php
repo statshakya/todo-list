@@ -13,13 +13,16 @@ class Todo {
         return $stmt->fetchAll();
     }
 
-     public function getAll_active() {
-        $stmt = $this->conn->prepare("SELECT * FROM {$this->table} WHERE status=1 ORDER BY created_date DESC");
-        $stmt->execute();
-        return $stmt->fetchAll();
-    }
-     public function getAll_done() {
-        $stmt = $this->conn->prepare("SELECT * FROM {$this->table} WHERE status=0 ORDER BY created_date DESC");
+ public function getAll_active($userid = '') {
+    $stmt = $this->conn->prepare("SELECT * FROM {$this->table} WHERE status = 1 AND user_id = :userid ORDER BY created_date DESC");
+    $stmt->bindParam(':userid', $userid);
+    $stmt->execute();
+    return $stmt->fetchAll();
+}
+
+     public function getAll_done($userid = '') {
+        $stmt = $this->conn->prepare("SELECT * FROM {$this->table} WHERE status=0 AND user_id = :userid ORDER BY created_date DESC");
+        $stmt->bindParam(':userid', $userid);
         $stmt->execute();
         return $stmt->fetchAll();
     }
@@ -29,13 +32,14 @@ class Todo {
         return $stmt->fetch();
     }
 
-public function create($title) {
+public function create($title, $userid) {
     $stmt = $this->conn->prepare("
-        INSERT INTO {$this->table} (title, status, created_date, updated_date)
-        VALUES (?, 0, NOW(), NOW())
+        INSERT INTO {$this->table} (title, user_id, status, created_date, updated_date)
+        VALUES (?, ?, 0, NOW(), NOW())
     ");
-    return $stmt->execute([$title]);
+    return $stmt->execute([$title, $userid]);
 }
+
 
 
 

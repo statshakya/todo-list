@@ -54,15 +54,23 @@ public function usernameExists($username, $excludeId = 0) {
     return $stmt->fetch() ? true : false;
 }
 
-public function updateProfile($id, $name, $email, $username, $password = null) {
-    if (!empty($password)) {
-        $hashed = password_hash($password, PASSWORD_DEFAULT);
-        $sql = "UPDATE {$this->table} SET name=?, email=?, username=?, password=?, updated_at=NOW() WHERE id=?";
-        return $this->conn->prepare($sql)->execute([$name, $email, $username, $hashed, $id]);
-    } else {
-        $sql = "UPDATE {$this->table} SET name=?, email=?, username=?, updated_at=NOW() WHERE id=?";
-        return $this->conn->prepare($sql)->execute([$name, $email, $username, $id]);
-    }
+public function updateProfileWithoutPassword($id, $name, $email, $username) {
+    $stmt = $this->conn->prepare("
+        UPDATE tbl_users 
+        SET name = ?, email = ?, username = ?, updated_at = NOW()
+        WHERE id = ?
+    ");
+    return $stmt->execute([$name, $email, $username, $id]);
+}
+
+public function updateProfile($id, $name, $email, $username, $password) {
+    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+    $stmt = $this->conn->prepare("
+        UPDATE tbl_users 
+        SET name = ?, email = ?, username = ?, password = ?, updated_at = NOW()
+        WHERE id = ?
+    ");
+    return $stmt->execute([$name, $email, $username, $hashedPassword, $id]);
 }
 
     // Check if username/email exists (for validation)

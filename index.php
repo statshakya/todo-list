@@ -5,9 +5,10 @@ require_once 'login_verify.php';
 $db = new Database();
 $conn = $db->connect();
 $todo = new Todo($conn);
-
-$todos = $todo->getAll_done();
-$tododones = $todo->getAll_active();
+// print_r($_SESSION['user_id']);
+$userid=$_SESSION['user_id'];
+$todos = $todo->getAll_done($userid);
+$tododones = $todo->getAll_active($userid);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -46,7 +47,7 @@ $tododones = $todo->getAll_active();
             <?php echo htmlspecialchars($_SESSION['username'] ?? 'User'); ?>
           </a>
           <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-            <li><a class="dropdown-item" href="#">Profile</a></li>
+            <li><a class="dropdown-item" href="profile.php">Profile</a></li>
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" href="logout.php">Logout</a></li>
           </ul>
@@ -56,12 +57,7 @@ $tododones = $todo->getAll_active();
   </div>
 </nav>
     <div id="header">
-        <div class="flexrow-container">
-            <div class="standard-theme theme-selector"></div>
-            <div class="light-theme theme-selector"></div>
-            <div class="darker-theme theme-selector"></div>
-        </div>
-        <h1>Just do it.<div id="border"></div>
+        <h1>PlanPal<div id="border"></div>
         </h1>
     </div><b></b>
  <!-- #region -->
@@ -70,6 +66,7 @@ $tododones = $todo->getAll_active();
             <div id="result_msg"></div>
             <input type="hidden" name="todo_id" id="todo_id" value="">
             <input class="todo-input" type="text" placeholder="Add a task." name="title">
+            <input type="hidden" name="userid" value=""<?php echo htmlspecialchars($_SESSION['user_id'] ?? ''); ?>>
             <button class="todo-btn" type="submit" id="submit">I Got This!</button>
         </form>
     </div>
