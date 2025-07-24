@@ -10,68 +10,226 @@ $tododones = $todo->getAll_active();
 ?>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#062e3f">
-  <meta name="Description" content="A dynamic and aesthetic To-Do List WebApp.">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#af8eceff" />
+  <meta name="Description" content="Aesthetic To-Do Registration" />
+  <title>About You | PlanPal</title>
 
-  <!-- Google Font -->
-  <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300&display=swap" rel="stylesheet">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;500;700&display=swap" rel="stylesheet" />
 
-  <!-- Font Awesome Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0-2/css/all.min.css"
-    integrity="sha256-46r060N2LrChLLb5zowXQ72/iKKNiw/lAmygmHExk/o=" crossorigin="anonymous" />
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Work Sans', sans-serif;
+      background-color: #fff;
+      display: flex;
+      min-height: 100vh;
+    }
 
-  <link rel="shortcut icon" type="image/png" href="assets/favicon.png" />
-  <link rel="stylesheet" href="CSS/main.css">
-  <link rel="stylesheet" href="CSS/corner.css">
+    .left-panel {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 40px;
+      background-color: #fefefe;
+    }
 
-  <title>Register | PlanPal</title>
+    .form-box {
+      background-color: #ffffff;
+      padding: 30px 25px;
+      border-radius: 20px;
+      box-shadow: 0 0 15px rgba(175, 142, 206, 0.3);
+      border: 2px solid #e6d6f7;
+      text-align: center;
+      max-width: 400px;
+      width: 100%;
+    }
+
+    .form-box img {
+     width: 150px;
+            margin-bottom: 15px;
+            animation: bounce 2.5s infinite ease-in-out;
+    }
+
+    .form-box h2 {
+      font-weight: 700;
+      font-size: 28px;
+      color: #b973da;
+      margin-bottom: 5px;
+    }
+
+    .form-box p {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 25px;
+    }
+
+    /* Wrap each label + input */
+    .form-group {
+      max-width: 320px;
+      margin: 0 auto 15px;
+      text-align: left;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 14px;
+      color: #333;
+      margin-bottom: 5px;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 12px 15px;
+      border-radius: 25px;
+      border: 1px solid #ccc;
+      background-color: #fafafa;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+
+    .form-group input::placeholder {
+      color: #aaa;
+    }
+
+    button {
+      width: 320px;
+      padding: 12px;
+      background-color: #af8eceff;
+      color: white;
+      border: 2px solid #f7c6c7;
+      border-radius: 25px;
+      font-weight: 600;
+      font-size: 15px;
+      cursor: pointer;
+      transition: 0.3s ease;
+      margin: 10px auto 0;
+      display: block;
+    }
+
+    button:hover {
+      background-color: #9c7fc6cc;
+      box-shadow: 0 0 10px 2px #f7c6c7aa;
+    }
+
+    .login-link {
+      font-size: 13px;
+      margin-top: 12px;
+      color: #666;
+      text-align: center;
+    }
+
+    .login-link a {
+      color: #b973da;
+      text-decoration: none;
+    }
+
+    .login-link a:hover {
+      text-decoration: underline;
+    }
+
+    .right-panel {
+      flex: 1;
+      background-color: #af8eceff;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;  /* Shift content upward */
+      align-items: center;
+      padding: 60px 40px 20px;       /* more top padding, less bottom */
+      color: white;
+      user-select: none;
+    }
+
+    .right-panel .app-name {
+      font-family: 'Work Sans', sans-serif;
+      font-weight: 700;
+      font-size: 4rem;
+      letter-spacing: 0.05em;
+      margin-bottom: 25px;
+      margin-top: 0;                 /* Remove default top margin */
+      text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .right-panel img.todolist {
+      width: 70%;
+      max-width: 800px;
+      margin-top: 0;                 /* Remove any extra margin on top */
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    #register_msg {
+      max-width: 320px;
+      margin: 0 auto 10px;
+      font-size: 14px;
+      text-align: center;
+    }
+
+    .validate-has-error {
+      color: red;
+      font-size: 13px;
+      margin-top: -10px;
+      margin-bottom: 10px;
+      display: block;
+    }
+  </style>
 </head>
 
 <body>
-  <div id="header">
-    <div class="flexrow-container">
-      <div class="standard-theme theme-selector" title="Default Theme"></div>
-      <div class="light-theme theme-selector" title="Light Theme"></div>
-      <div class="darker-theme theme-selector" title="Dark Theme"></div>
-    </div>
-    <h2 class="brand-heading">PlanPal</h2>
-    <h1>Register<div id="border"></div></h1>
-  </div>
+  <div class="left-panel">
+    <div class="form-box">
+      <img src="https://purpledaisydesign.com/wp-content/uploads/2021/05/N-2584-Cute-Baby-Elephant-colored.jpg" alt="Elephant Cartoon" />
+      <h2>About You</h2>
+      <p>Create your PlanPal account</p>
 
-  <div id="form">
-    <form id="register-form" method="POST" style="margin-top: 20px;">
-      <div class="row">
-        <div class="col-12">
+      <form id="register-form" method="POST">
+        <div class="form-group">
           <label for="name">Name</label>
-          <input class="todo-input" id="name" type="text" placeholder="Name" name="name">
+          <input type="text" id="name" name="name" placeholder="Your name" />
         </div>
-        <div class="col-12">
+
+        <div class="form-group">
           <label for="email">Email</label>
-          <input class="todo-input" id="email" type="email" placeholder="Email" name="email">
+          <input type="email" id="email" name="email" placeholder="Your email" />
         </div>
-        <div class="col-12">
+
+        <div class="form-group">
           <label for="username">Username</label>
-          <input class="todo-input" id="username" type="text" placeholder="Username" name="username">
+          <input type="text" id="username" name="username" placeholder="Choose a username" />
         </div>
-        <div class="col-12">
+
+        <div class="form-group">
           <label for="password">Password</label>
-          <input class="todo-input" id="password" type="password" placeholder="Password" name="password">
+          <input type="password" id="password" name="password" placeholder="Create a password" />
         </div>
+
         <div id="register_msg"></div>
-        <button class="todo-btn" type="submit" id="register-submit">Register</button>
-      </div>
-    </form>
+
+        <button type="submit" id="register-submit">Register</button>
+
+        <div class="login-link">
+          Already registered? <a href="login.php">Login</a>
+        </div>
+      </form>
+    </div>
   </div>
 
+  <div class="right-panel">
+    <h1 class="app-name">PlanPal</h1>
+    <img src="images/girl-todolist.svg" alt="Todolist Girl" class="todolist" />
+  </div>
+
+  <!-- jQuery and Validation scripts -->
   <script src="js/jquery.min.js" type="text/javascript"></script>
   <script src="js/jquery.validate.js" type="text/javascript"></script>
-  <script src="JS/main.js" type="text/javascript"></script>
-
-  <script type="text/javascript">
+  <script>
     jQuery(document).ready(function () {
       jQuery('#register-form').validate({
         errorElement: 'span',
@@ -116,5 +274,4 @@ $tododones = $todo->getAll_active();
     });
   </script>
 </body>
-
 </html>
