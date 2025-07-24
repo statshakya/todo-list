@@ -40,8 +40,8 @@ $currentUser = $user->getById($_SESSION['user_id']); // fetch current data
 }
 /* Stylish centered form card */
 .profile-card {
- background-color: rgba(128, 128, 128, 0.08);  /* soft light gray */
-  border: 1px solid rgba(255, 255, 255, 0.2);  /* soft white border */
+ background-color: rgba(233, 194, 235, 0.08);  /* soft light gray */
+  border: 1px solid rgba(237, 206, 245, 0.2);  /* soft white border */
   border-radius: 12px;
   padding: 30px;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);  /* subtle shadow */
@@ -55,36 +55,68 @@ $currentUser = $user->getById($_SESSION['user_id']); // fetch current data
 .formtitle{
     color: black;
 }
+    body {
+      font-family: 'Work Sans', sans-serif;
+      background-color: #f8f2fc;
+      color: #333;
+    }
+
+    .navbar {
+      background: linear-gradient(90deg, #d6a4f0, #fbc2eb);
+    }
+
+    .navbar-brand {
+      font-family: 'Caveat', cursive;
+      font-size: 2rem;
+      color: #fff;
+    }
+
+    .dropdown-menu {
+      background-color: #fff0fc;
+      border: 1px solidrgb(221, 195, 243);
+    }
+
+    .dropdown-item {
+      color:rgb(218, 190, 241);
+    }
+
+    .dropdown-item:hover {
+      background-color: #f1dafc;
+      color:rgb(219, 186, 255);
+    }
+
 </style>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark" style="width:100%;">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="index.php">PlanPal</a>
-    
-    <div class="collapse navbar-collapse justify-content-end">
-      <ul class="navbar-nav">
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
-            <?php echo htmlspecialchars($_SESSION['username'] ?? 'User'); ?>
-          </a>
-          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-            <li><a class="dropdown-item" href="profile.php">Profile</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="logout.php">Logout</a></li>
-          </ul>
-        </li>
-      </ul>
+    <body>
+
+  <nav class="navbar navbar-expand-lg" style="width: 100%;">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">PlanPal</a>
+      <div class="collapse navbar-collapse justify-content-end">
+        <ul class="navbar-nav">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+              <?php echo htmlspecialchars($_SESSION['username'] ?? 'User'); ?>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+              <li><a class="dropdown-item" href="index.php">📝 Todo List</a></li>
+              <li><a class="dropdown-item" href="notes.php">📒 Notes</a></li>
+              <li><a class="dropdown-item" href="calendar.php">📅 Calendar</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="profile.php">👤 Profile</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="logout.php">🚪 Logout</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
     </div>
-  </div>
-</nav>
+  </nav>
+
     <div id="header">
-        <div class="flexrow-container">
-            <div class="standard-theme theme-selector"></div>
-            <div class="light-theme theme-selector"></div>
-            <div class="darker-theme theme-selector"></div>
         </div>
-        <h1>Just do it.<div id="border"></div>
+        <h1>Your Profile<div id="border"></div>
         </h1>
     </div><b></b>
  <!-- #region -->
