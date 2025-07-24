@@ -3,15 +3,10 @@ require_once 'config/database.php';
 require_once 'model/tododata.php';
 session_start();
 
-$db = new Database();
-$conn = $db->connect();
-$todo = new Todo($conn);
-
-$todos = $todo->getAll_done();
-$tododones = $todo->getAll_active();
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8" />
     <title>Login | PlanPal</title>
@@ -30,7 +25,8 @@ $tododones = $todo->getAll_active();
             box-sizing: border-box;
         }
 
-        body, html {
+        body,
+        html {
             height: 100%;
             font-family: 'Work Sans', sans-serif;
             background-color: #fff;
@@ -101,8 +97,15 @@ $tododones = $todo->getAll_active();
         }
 
         @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-8px); }
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-8px);
+            }
         }
 
         .form-box h2 {
@@ -123,7 +126,9 @@ $tododones = $todo->getAll_active();
             margin: 0 auto;
         }
 
-        input[type="text"], input[type="password"], input[type="email"] {
+        input[type="text"],
+        input[type="password"],
+        input[type="email"] {
             width: 100%;
             padding: 12px 15px;
             margin-bottom: 20px;
@@ -199,84 +204,106 @@ $tododones = $todo->getAll_active();
         }
     </style>
 </head>
+
 <body>
-<div class="container">
-    <div class="left-panel">
-        <h1 class="app-name">PlanPal</h1>
-        <img src="images/girl-todolist.svg" alt="Todolist Girl" class="todolist" />
-    </div>
+    <div class="container">
+        <div class="left-panel">
+            <h1 class="app-name">PlanPal</h1>
+            <img src="images/girl-todolist.svg" alt="Todolist Girl" class="todolist" />
+        </div>
 
-    <div class="right-panel">
-        <div class="form-box">
-            <img src="https://purpledaisydesign.com/wp-content/uploads/2021/05/N-2584-Cute-Baby-Elephant-colored.jpg" alt="Smiling Elephant" class="elephant" />
-            <h2>Hello Lovely!</h2>
-            <p>Welcome! Please login</p>
+        <div class="right-panel">
+            <div class="form-box">
+                <img src="https://purpledaisydesign.com/wp-content/uploads/2021/05/N-2584-Cute-Baby-Elephant-colored.jpg" alt="Smiling Elephant" class="elephant" />
+                <h2>Hello Lovely!</h2>
+                <p>Welcome! Please login</p>
 
-            <form id="login-form">
-                <input type="text" name="username" placeholder="Username or Email" autocomplete="off" required />
-                <div class="form-group">
-                    <input type="password" name="password" id="password" placeholder="Password" autocomplete="off" required />
-                    <span class="toggle-password" onclick="togglePassword()" title="Show/hide password">👁️</span>
-                </div>
-                <div id="login_msg"></div>
-                <button type="submit" id="login-submit">Login</button>
-                <div class="signup-link">
-                    <span>Don't have an account? </span>
-                    <a href="register.php">Sign up</a>
-                </div>
-            </form>
+                <form id="login-form">
+                    <input type="text" name="username" placeholder="Username or Email" autocomplete="off" required />
+                    <div class="form-group">
+                        <input type="password" name="password" id="password" placeholder="Password" autocomplete="off" required />
+                        <span class="toggle-password" onclick="togglePassword()" title="Show/hide password">👁️</span>
+                    </div>
+                    <div id="login_msg"></div>
+                    <button type="submit" id="login-submit">Login</button>
+                    <div class="signup-link">
+                        <span>Don't have an account? </span>
+                        <a href="register.php">Sign up</a>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-</div>
 
-<!-- Scripts -->
-<script src="js/jquery.min.js"></script>
-<script src="js/jquery.validate.js"></script>
-<script>
-    function togglePassword() {
-        const input = document.getElementById('password');
-        input.type = input.type === 'password' ? 'text' : 'password';
-    }
+    <!-- Scripts -->
+    <script src="js/jquery.min.js"></script>
+    <script src="js/jquery.validate.js"></script>
+    <script>
+        function togglePassword() {
+            const input = document.getElementById('password');
+            const toggle = document.querySelector('.toggle-password');
 
-    jQuery(document).ready(function () {
-        jQuery('#login-form').validate({
-            rules: {
-                username: { required: true, minlength: 2 },
-                password: { required: true, minlength: 2 }
-            },
-            messages: {
-                username: { required: "Enter username", minlength: "Min 2 characters" },
-                password: { required: "Enter password", minlength: "Min 2 characters" }
-            },
-            submitHandler: function (form) {
-                const Frmval = jQuery(form).serialize();
-                jQuery("#login-submit").attr("disabled", true).html('Logging in...');
-
-                jQuery.ajax({
-                    type: "POST",
-                    dataType: "json",
-                    url: "ajax/tododata.php",
-                    data: "action=login&" + Frmval,
-                    success: function (response) {
-                        jQuery("#login-submit").removeAttr("disabled").html('Login');
-                        if (response.status === "success") {
-                            jQuery('#login_msg').css("color", "green").html(response.message).fadeIn();
-                            setTimeout(function () {
-                                window.location.href = "index.php";
-                            }, 2000);
-                        } else {
-                            jQuery('#login_msg').css("color", "red").html(response.message).fadeIn();
-                        }
-                    },
-                    error: function () {
-                        jQuery("#login-submit").removeAttr("disabled").html('Login');
-                        jQuery('#login_msg').css("color", "red").html("Something went wrong.").fadeIn();
-                    }
-                });
-                return false;
+            if (input.type === 'password') {
+                input.type = 'text';
+                toggle.textContent = '🫣';
+            } else {
+                input.type = 'password';
+                toggle.textContent = '👁️';
             }
+        }
+
+        jQuery(document).ready(function() {
+            jQuery('#login-form').validate({
+                rules: {
+                    username: {
+                        required: true,
+                        minlength: 2
+                    },
+                    password: {
+                        required: true,
+                        minlength: 2
+                    }
+                },
+                messages: {
+                    username: {
+                        required: "Enter username",
+                        minlength: "Min 2 characters"
+                    },
+                    password: {
+                        required: "Enter password",
+                        minlength: "Min 2 characters"
+                    }
+                },
+                submitHandler: function(form) {
+                    const Frmval = jQuery(form).serialize();
+                    jQuery("#login-submit").attr("disabled", true).html('Logging in...');
+
+                    jQuery.ajax({
+                        type: "POST",
+                        dataType: "json",
+                        url: "ajax/tododata.php",
+                        data: "action=login&" + Frmval,
+                        success: function(response) {
+                            jQuery("#login-submit").removeAttr("disabled").html('Login');
+                            if (response.status === "success") {
+                                jQuery('#login_msg').css("color", "green").html(response.message).fadeIn();
+                                setTimeout(function() {
+                                    window.location.href = "index.php";
+                                }, 2000);
+                            } else {
+                                jQuery('#login_msg').css("color", "red").html(response.message).fadeIn();
+                            }
+                        },
+                        error: function() {
+                            jQuery("#login-submit").removeAttr("disabled").html('Login');
+                            jQuery('#login_msg').css("color", "red").html("Something went wrong.").fadeIn();
+                        }
+                    });
+                    return false;
+                }
+            });
         });
-    });
-</script>
+    </script>
 </body>
+
 </html>
