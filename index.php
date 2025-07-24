@@ -183,7 +183,7 @@ $tododones = $todo->getAll_active($userid);
       <option value="Personal">Personal</option>
         <option value="Work">Work</option>
         <option value="Study">Study</option>
-        <option value="Fitness">Study</option>
+        <option value="Fitness">Fitness</option>
         <option value="Others">Others</option>
       </select>
     <input type="time" id="taskTime" required>

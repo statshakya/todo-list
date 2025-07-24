@@ -222,7 +222,7 @@ session_start();
                     <input type="text" name="username" placeholder="Username or Email" autocomplete="off" required />
                     <div class="form-group">
                         <input type="password" name="password" id="password" placeholder="Password" autocomplete="off" required />
-                        <span class="toggle-password" onclick="togglePassword()" title="Show/hide password">👁️</span>
+                        <span class="toggle-password" onclick="togglePassword()" title="Show/hide password">🙈</span>
                     </div>
                     <div id="login_msg"></div>
                     <button type="submit" id="login-submit">Login</button>
@@ -245,10 +245,10 @@ session_start();
 
             if (input.type === 'password') {
                 input.type = 'text';
-                toggle.textContent = '🫣';
+                toggle.textContent = '👁️';
             } else {
                 input.type = 'password';
-                toggle.textContent = '👁️';
+                toggle.textContent = '🙈';
             }
         }
 
