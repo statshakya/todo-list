@@ -1,21 +1,20 @@
 <?php
 require_once 'config/database.php';
 require_once 'model/tododata.php';
-$db = new Database();
-$conn = $db->connect();
-$todo = new Todo($conn);
 
-$todos = $todo->getAll_done();
-$tododones = $todo->getAll_active();
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Favicon -->
+  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3468/3468371.png" type="image/x-icon" />
+
   <meta name="theme-color" content="#af8eceff" />
-  <meta name="Description" content="Aesthetic To-Do Registration" />
-  <title>About You | PlanPal</title>
+  <title>Register | PlanPal</title>
 
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;500;700&display=swap" rel="stylesheet" />
@@ -50,9 +49,9 @@ $tododones = $todo->getAll_active();
     }
 
     .form-box img {
-     width: 150px;
-            margin-bottom: 15px;
-            animation: bounce 2.5s infinite ease-in-out;
+      width: 150px;
+      margin-bottom: 15px;
+      animation: bounce 2.5s infinite ease-in-out;
     }
 
     .form-box h2 {
@@ -137,9 +136,11 @@ $tododones = $todo->getAll_active();
       background-color: #af8eceff;
       display: flex;
       flex-direction: column;
-      justify-content: flex-start;  /* Shift content upward */
+      justify-content: flex-start;
+      /* Shift content upward */
       align-items: center;
-      padding: 60px 40px 20px;       /* more top padding, less bottom */
+      padding: 60px 40px 20px;
+      /* more top padding, less bottom */
       color: white;
       user-select: none;
     }
@@ -150,19 +151,28 @@ $tododones = $todo->getAll_active();
       font-size: 4rem;
       letter-spacing: 0.05em;
       margin-bottom: 25px;
-      margin-top: 0;                 /* Remove default top margin */
+      margin-top: 0;
+      /* Remove default top margin */
       text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.3);
     }
 
     .right-panel img.todolist {
       width: 70%;
       max-width: 800px;
-      margin-top: 0;                 /* Remove any extra margin on top */
+      margin-top: 0;
+      /* Remove any extra margin on top */
     }
 
     @keyframes bounce {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-8px); }
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-8px);
+      }
     }
 
     #register_msg {
@@ -230,23 +240,47 @@ $tododones = $todo->getAll_active();
   <script src="js/jquery.min.js" type="text/javascript"></script>
   <script src="js/jquery.validate.js" type="text/javascript"></script>
   <script>
-    jQuery(document).ready(function () {
+    jQuery(document).ready(function() {
       jQuery('#register-form').validate({
         errorElement: 'span',
         errorClass: 'validate-has-error',
         rules: {
-          name: { required: true, minlength: 2 },
-          email: { required: true, email: true },
-          username: { required: true, minlength: 2 },
-          password: { required: true, minlength: 4 }
+          name: {
+            required: true,
+            minlength: 2
+          },
+          email: {
+            required: true,
+            email: true
+          },
+          username: {
+            required: true,
+            minlength: 2
+          },
+          password: {
+            required: true,
+            minlength: 4
+          }
         },
         messages: {
-          name: { required: "Required", minlength: "Minimum 2 characters" },
-          email: { required: "Required", email: "Enter valid email" },
-          username: { required: "Required", minlength: "Minimum 2 characters" },
-          password: { required: "Required", minlength: "Minimum 4 characters" }
+          name: {
+            required: "Required",
+            minlength: "Minimum 2 characters"
+          },
+          email: {
+            required: "Required",
+            email: "Enter valid email"
+          },
+          username: {
+            required: "Required",
+            minlength: "Minimum 2 characters"
+          },
+          password: {
+            required: "Required",
+            minlength: "Minimum 4 characters"
+          }
         },
-        submitHandler: function (form) {
+        submitHandler: function(form) {
           var Frmval = jQuery("#register-form").serialize();
           jQuery("#register-submit").attr("disabled", true).html('Registering...');
 
@@ -255,7 +289,7 @@ $tododones = $todo->getAll_active();
             dataType: "JSON",
             url: "ajax/tododata.php",
             data: "action=register&" + Frmval,
-            success: function (data) {
+            success: function(data) {
               jQuery("#register-submit").removeAttr("disabled").html('Register');
               jQuery('#register_msg').html(data.message)
                 .addClass('alert alert-' + (data.status === 'success' ? 'success' : 'danger'))
@@ -263,7 +297,9 @@ $tododones = $todo->getAll_active();
 
               if (data.status === 'success') {
                 jQuery("#register-form")[0].reset();
-                window.location.href = 'login.php';
+                setTimeout(function() {
+                  window.location.href = "login.php";
+                }, 4000);
               }
             }
           });
@@ -274,4 +310,5 @@ $tododones = $todo->getAll_active();
     });
   </script>
 </body>
+
 </html>
