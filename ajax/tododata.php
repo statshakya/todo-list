@@ -15,7 +15,7 @@ try {
     $todo = new Todo($conn);
     $user = new User($conn);
 
-    
+
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $action = $_POST['action'] ?? '';
@@ -25,6 +25,7 @@ try {
             // ✅ Add New Task
             case 'add':
                 $title = trim($_POST['title'] ?? '');
+                $type = trim($_POST['type'] ?? '');
                 $userid = $_SESSION['user_id'] ?? null;
 
                 if (!$userid) {
@@ -32,7 +33,7 @@ try {
                 } elseif (strlen($title) < 2) {
                     $response = ['status' => 'error', 'message' => 'Task title must be at least 2 characters.'];
                 } else {
-                    $success = $todo->create($title, $userid);
+                    $success = $todo->create($title, $type, $userid);
                     $response = $success
                         ? ['status' => 'success', 'message' => '✅ Task added successfully!']
                         : ['status' => 'error', 'message' => '❌ Failed to add task.'];
@@ -61,12 +62,13 @@ try {
             // ✏️ Update Task Title
             case 'update':
                 $title = trim($_POST['title'] ?? '');
-                $id = intval($_POST['todo_id'] ?? 0);
+                $type = trim($_POST['type'] ?? '');
+                $id = intval($_POST['id'] ?? 0);
 
                 if ($id <= 0 || strlen($title) < 2) {
                     $response = ['status' => 'error', 'message' => '❌ Invalid task update request.'];
                 } else {
-                    $success = $todo->update($id, $title);
+                    $success = $todo->update($id, $title, $type);
                     $response = $success
                         ? ['status' => 'success', 'message' => '✏️ Task updated successfully!']
                         : ['status' => 'error', 'message' => '❌ Failed to update task.'];

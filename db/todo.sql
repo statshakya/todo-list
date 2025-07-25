@@ -20,9 +20,7 @@ CREATE TABLE `tbl_tododata` (
 
 INSERT INTO `tbl_tododata` (`id`, `title`, `status`, `user_id`, `created_date`, `Updated_date`) VALUES
 (23,	'asdasdasd',	0,	0,	'2025-06-28 11:34:39',	'2025-06-28 11:34:39'),
-(24,	'asdcasdasd',	0,	0,	'2025-06-28 11:34:51',	'2025-06-28 11:34:51'),
-(27,	'i love evengila',	0,	1,	'2025-07-13 07:53:14',	'2025-07-13 07:53:14'),
-(28,	'evengila is doing great proud of her',	0,	1,	'2025-07-13 07:53:34',	'2025-07-13 07:53:34');
+(24,	'asdcasdasd',	0,	0,	'2025-06-28 11:34:51',	'2025-06-28 11:34:51');
 
 DROP TABLE IF EXISTS `tbl_users`;
 CREATE TABLE `tbl_users` (
