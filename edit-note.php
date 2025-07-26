@@ -166,7 +166,7 @@ $(document).ready(function () {
               if (response.redirect) {
                 window.location.href = response.redirect;
               } else {
-                location.href = "notes-list.php"; // redirect back to list
+                location.href = "edit-note.php?id=" + noteId; // redirect back to list
               }
             }, 1500);
           } else {
@@ -194,9 +194,13 @@ $(document).ready(function () {
       return false;
     }
   });
-  $('#delete-file').on('click', function() {
+$('#delete-file').on('click', function() {
     if (confirm('Are you sure you want to delete this file?')) {
         const noteId = $('#note_id').val();
+        const $deleteButton = $(this);
+        
+        $deleteButton.prop('disabled', true).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Deleting...');
+        
         $.ajax({
             type: 'POST',
             url: 'ajax/notecontrol.php',
@@ -205,10 +209,21 @@ $(document).ready(function () {
             success: function(response) {
                 if (response.status === 'success') {
                     $('#current-file').remove();
-                    $('#upload-result').html('<div class="alert alert-info">File deleted. You can upload a new one.</div>');
+                    $('#upload-result').html('<div class="alert alert-success">File deleted successfully.</div>');
                 } else {
-                    $('#upload-result').html('<div class="alert alert-danger">Could not delete file.</div>');
+                    $('#upload-result').html('<div class="alert alert-danger">' + (response.message || 'Could not delete file.') + '</div>');
                 }
+            },
+            error: function(xhr) {
+                let errorMsg = 'Could not delete file.';
+                try {
+                    const response = JSON.parse(xhr.responseText);
+                    errorMsg = response.message || errorMsg;
+                } catch (e) {}
+                $('#upload-result').html('<div class="alert alert-danger">' + errorMsg + '</div>');
+            },
+            complete: function() {
+                $deleteButton.prop('disabled', false).html('Delete File');
             }
         });
     }

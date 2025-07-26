@@ -28,36 +28,36 @@ private $uploadDir;
     }
 
     // Handle file upload
-    private function handleFileUpload($file) {
-        if (!$file || !isset($file['name']) || empty($file['name'])) {
-            return null;
-        }
-
-        // Validate file
-        $allowedTypes = ['image/jpeg', 'image/png', 'application/pdf', 'text/plain'];
-        $maxSize = 5 * 1024 * 1024; // 5MB
-
-        if (!in_array($file['type'], $allowedTypes)) {
-            throw new Exception("Invalid file type. Only JPG, PNG, PDF, and TXT files are allowed.");
-        }
-
-        if ($file['size'] > $maxSize) {
-            throw new Exception("File size exceeds maximum limit of 5MB.");
-        }
-
-        // Generate unique filename
-        $fileExt = pathinfo($file['name'], PATHINFO_EXTENSION);
-        $fileName = uniqid('note_') . '.' . $fileExt;
-        $filePath = $this->uploadDir . $fileName;
-
-        // Move uploaded file
-        if (!move_uploaded_file($file['tmp_name'], $filePath)) {
-            throw new Exception("Failed to upload file.");
-        }
-
-        return $fileName;
+  private function handleFileUpload($file) {
+    if (!$file || !isset($file['name']) || empty($file['name'])) {
+        return null;
     }
 
+    // Validate file
+    $allowedTypes = ['image/jpeg', 'image/png', 'application/pdf', 'text/plain'];
+    $maxSize = 5 * 1024 * 1024; // 5MB
+
+    if (!in_array($file['type'], $allowedTypes)) {
+        throw new Exception("Invalid file type. Only JPG, PNG, PDF, and TXT files are allowed.");
+    }
+
+    if ($file['size'] > $maxSize) {
+        throw new Exception("File size exceeds maximum limit of 5MB.");
+    }
+
+    // Generate unique filename
+    $fileExt = pathinfo($file['name'], PATHINFO_EXTENSION);
+    $fileName = uniqid('note_') . '.' . $fileExt;
+    $filePath = $this->uploadDir . $fileName;
+
+    // Move uploaded file
+    if (!move_uploaded_file($file['tmp_name'], $filePath)) {
+        throw new Exception("Failed to upload file.");
+    }
+
+    // Return full relative path instead of just filename
+    return 'uploads/notes/' . $fileName;
+}
     // Create a new note with file upload handling
    public function create($title, $content, $userid, $file = null) {
     $fileupload = $file;
@@ -89,35 +89,38 @@ private $uploadDir;
 
     // Update an existing note with file handling
     public function update($id, $title, $content, $file = null) {
-        try {
-            // Get current file if exists
-            $currentNote = $this->getById($id);
-            $currentFile = $currentNote['fileupload'] ?? null;
-            $newFile = $currentFile;
+    try {
+        // Get current note data
+        $currentNote = $this->getById($id);
+        $currentFile = $currentNote['fileupload'] ?? null;
+        $newFile = $currentFile;
 
-            // Handle new file upload if provided
-            if ($file) {
-                $newFile = $this->handleFileUpload($file);
-                
-                // Delete old file if it exists and new file was uploaded successfully
-                if ($currentFile && $newFile && file_exists($this->uploadDir . $currentFile)) {
-                    unlink($this->uploadDir . $currentFile);
+        // Handle new file upload if provided
+        if ($file) {
+            $newFile = $this->handleFileUpload($file);
+            
+            // Delete old file if it exists and new file was uploaded successfully
+            if ($currentFile && $newFile) {
+                $fullPath = '../' . $currentFile; // Adjust path as needed
+                if (file_exists($fullPath)) {
+                    unlink($fullPath);
                 }
             }
-
-            $stmt = $this->conn->prepare("
-                UPDATE {$this->table}
-                SET title = ?, content = ?, fileupload = ?, updated_date = NOW()
-                WHERE id = ?
-            ");
-            
-            return $stmt->execute([$title, $content, $newFile, $id]);
-            
-        } catch (Exception $e) {
-            error_log("Note update failed: " . $e->getMessage());
-            return false;
         }
+
+        $stmt = $this->conn->prepare("
+            UPDATE {$this->table}
+            SET title = ?, content = ?, fileupload = ?, updated_date = NOW()
+            WHERE id = ?
+        ");
+        
+        return $stmt->execute([$title, $content, $newFile, $id]);
+        
+    } catch (Exception $e) {
+        error_log("Note update failed: " . $e->getMessage());
+        return false;
     }
+}
 public function deleteFileOnly($id) {
     try {
         $note = $this->getById($id);
