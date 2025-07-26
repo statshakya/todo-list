@@ -202,7 +202,8 @@ $events = $calendar->getAll($userid);
     <div class="d-flex align-items-center justify-content-start gap-2 mb-3">
       <button id="showAllBtn" class="btn btn-secondary">All</button>
       <!-- Date Filter -->
-      <input type="date" id="dateFilter" class="form-control w-auto">
+      <input type="date" id="dateFilterin" class="form-control w-auto">
+      <input type="date" id="dateFilterout" class="form-control w-auto">
       
       <!-- Search Bar -->
       <input type="text" id="searchEvent" class="form-control" placeholder="Search events...">
@@ -358,29 +359,28 @@ function editEvent(button) {
 
 function filterEvents() {
     const searchInput = document.getElementById("searchEvent");
-    const dateInput = document.getElementById("dateFilter");
+    const dateIn = document.getElementById("dateFilterin");
+    const dateOut = document.getElementById("dateFilterout");
     const eventList = document.getElementById("eventList");
     
-    if (!searchInput || !dateInput || !eventList) return;
-    
     const searchTerm = searchInput.value.trim().toLowerCase();
-    const selectedDate = dateInput.value;
+    const dateInValue = dateIn.value;
+    const dateOutValue = dateOut.value;
     const events = eventList.querySelectorAll("li");
 
     events.forEach(event => {
-        const eventTitle = event.querySelector(".event-title")?.textContent.toLowerCase() || '';
-        const eventDate = event.getAttribute("data-event-date") || '';
+        const eventTitle = event.querySelector(".event-title").textContent.toLowerCase();
+        const eventDate = event.getAttribute("data-event-date");
         
-        // Check if filters are active
-        const searchActive = searchTerm !== '';
-        const dateActive = selectedDate !== '';
+        // Search filter
+        const matchesSearch = searchTerm === '' || eventTitle.includes(searchTerm);
         
-        // Determine matches
-        const matchesSearch = !searchActive || eventTitle.includes(searchTerm);
-        const matchesDate = !dateActive || eventDate === selectedDate;
+        // Date range filter
+        const matchesDate = (dateInValue === '' || eventDate >= dateInValue) && 
+                          (dateOutValue === '' || eventDate <= dateOutValue);
         
-        // Show/hide based on matches
-         if (matchesSearch && matchesDate) {
+        // Show/hide
+            if (matchesSearch && matchesDate) {
             event.style.cssText = "display: flex !important";
         } else {
             event.style.cssText = "display: none !important";
@@ -390,7 +390,8 @@ function filterEvents() {
 
 function resetFilters() {
     // Clear both filters
-    document.getElementById("dateFilter").value = '';
+    document.getElementById("dateFilterin").value = '';
+    document.getElementById("dateFilterout").value = '';
     document.getElementById("searchEvent").value = '';
     // Show all events
     filterEvents();
@@ -399,15 +400,18 @@ function resetFilters() {
      document.addEventListener("DOMContentLoaded", function() {
     // Initialize date filter with today's date
      const showAllBtn = document.getElementById("showAllBtn");
-    const dateFilter = document.getElementById("dateFilter");
+    const dateFilter = document.getElementById("dateFilterin");
+    const dateFilterout = document.getElementById("dateFilterout");
     const searchInput = document.getElementById("searchEvent");
     
     // Set default date to empty (shows all events)
     dateFilter.value = '';
+    dateFilterout.value = '';
     
     // Add event listeners
     showAllBtn.addEventListener("click", resetFilters);
     dateFilter.addEventListener("change", filterEvents);
+    dateFilterout.addEventListener("change", filterEvents);
     searchInput.addEventListener("keyup", filterEvents);
     
     // Apply initial filter (shows all events)
