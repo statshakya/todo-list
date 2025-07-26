@@ -200,6 +200,7 @@ $events = $calendar->getAll($userid);
   <div class="container mt-4">
     <!-- Search Bar -->
     <div class="d-flex align-items-center justify-content-start gap-2 mb-3">
+      <button id="showAllBtn" class="btn btn-secondary">All</button>
       <!-- Date Filter -->
       <input type="date" id="dateFilter" class="form-control w-auto">
       
@@ -355,47 +356,62 @@ function editEvent(button) {
         });
       }
 
- function filterEvents() {
+function filterEvents() {
     const searchInput = document.getElementById("searchEvent");
     const dateInput = document.getElementById("dateFilter");
     const eventList = document.getElementById("eventList");
     
     if (!searchInput || !dateInput || !eventList) return;
     
-    const searchTerm = searchInput.value.toLowerCase();
+    const searchTerm = searchInput.value.trim().toLowerCase();
     const selectedDate = dateInput.value;
-    
     const events = eventList.querySelectorAll("li");
 
     events.forEach(event => {
         const eventTitle = event.querySelector(".event-title")?.textContent.toLowerCase() || '';
         const eventDate = event.getAttribute("data-event-date") || '';
         
-        const matchesSearch = eventTitle.includes(searchTerm);
-        const matchesDate = !selectedDate || eventDate === selectedDate;
-
-        event.style.display = (matchesSearch && matchesDate) ? "flex" : "none";
+        // Check if filters are active
+        const searchActive = searchTerm !== '';
+        const dateActive = selectedDate !== '';
+        
+        // Determine matches
+        const matchesSearch = !searchActive || eventTitle.includes(searchTerm);
+        const matchesDate = !dateActive || eventDate === selectedDate;
+        
+        // Show/hide based on matches
+         if (matchesSearch && matchesDate) {
+            event.style.cssText = "display: flex !important";
+        } else {
+            event.style.cssText = "display: none !important";
+        }
     });
+}
+
+function resetFilters() {
+    // Clear both filters
+    document.getElementById("dateFilter").value = '';
+    document.getElementById("searchEvent").value = '';
+    // Show all events
+    filterEvents();
 }
 
      document.addEventListener("DOMContentLoaded", function() {
     // Initialize date filter with today's date
-    if (document.getElementById("dateFilter")) {
-        document.getElementById("dateFilter").value = new Date().toISOString().split('T')[0];
-    }
+     const showAllBtn = document.getElementById("showAllBtn");
+    const dateFilter = document.getElementById("dateFilter");
+    const searchInput = document.getElementById("searchEvent");
     
-    // Set up event listeners
-    if (document.getElementById("searchEvent")) {
-        document.getElementById("searchEvent").addEventListener("keyup", filterEvents);
-    }
-    if (document.getElementById("dateFilter")) {
-        document.getElementById("dateFilter").addEventListener("change", filterEvents);
-    }
+    // Set default date to empty (shows all events)
+    dateFilter.value = '';
     
-    // Apply initial filter if elements exist
-    if (document.getElementById("eventList")) {
-        filterEvents();
-    }
+    // Add event listeners
+    showAllBtn.addEventListener("click", resetFilters);
+    dateFilter.addEventListener("change", filterEvents);
+    searchInput.addEventListener("keyup", filterEvents);
+    
+    // Apply initial filter (shows all events)
+    filterEvents();
     
     // Check if we should show the form after reload
     if (sessionStorage.getItem('showEventForm') === 'true') {
