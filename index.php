@@ -35,6 +35,15 @@ $tododones = $todo->getAll_active($userid);
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
   <style>
+     html,
+    body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
     body {
       font-family: 'Work Sans', sans-serif;
       background-color: #f8f2fc;
@@ -56,13 +65,13 @@ $tododones = $todo->getAll_active($userid);
       border: 1px solidrgb(221, 195, 243);
     }
 
-   .dropdown-item {
-      color:rgba(0, 0, 0, 1);
+    .dropdown-item {
+      color: rgba(0, 0, 0, 1);
     }
 
     .dropdown-item:hover {
       background-color: #f1dafc;
-      color:rgba(61, 60, 63, 1);
+      color: rgba(61, 60, 63, 1);
     }
 
     body {
@@ -81,7 +90,7 @@ $tododones = $todo->getAll_active($userid);
 
     .floating-btn {
       position: fixed;
-      bottom: 20px;
+      bottom: 70px;
       left: 50%;
       transform: translateX(-50%);
       background-color: #af8ece;
@@ -96,7 +105,7 @@ $tododones = $todo->getAll_active($userid);
 
     .task-form-box {
       position: fixed;
-      bottom: 90px;
+      bottom: 140px;
       left: 50%;
       transform: translateX(-50%);
       background: white;
@@ -152,6 +161,17 @@ $tododones = $todo->getAll_active($userid);
     .form-check-input {
       margin-top: 14px !important;
     }
+
+     .footer {
+      background: #d6a4f0;
+      color: white;
+      text-align: center;
+      padding: 20px;
+      width: 100%;
+      margin-top: 50px;
+    }
+
+   
   </style>
 
   <title>Todo | PlanPal</title>
@@ -268,275 +288,276 @@ $tododones = $todo->getAll_active($userid);
 
     <!-- Floating Button -->
     <button class="floating-btn" onclick="createNewTask()">Create a Task +</button>
+  </div>
+  <?php include 'footer.php'; ?>
+  </div>
+  <!-- <p><span id="datetime"></span></p> -->
 
+  <!-- <script src="JS/time.js"></script> -->
+  <script src="js/jquery.min.js"></script>
+  <script src="js/jquery.validate.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- <script src="JS/todo.js"></script> -->
 
-    <!-- <p><span id="datetime"></span></p> -->
+  <script>
+    function filterTasks(category) {
+      const tasks = document.querySelectorAll("#taskList li");
 
-    <!-- <script src="JS/time.js"></script> -->
-    <script src="js/jquery.min.js"></script>
-    <script src="js/jquery.validate.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- <script src="JS/todo.js"></script> -->
-
-    <script>
-      function filterTasks(category) {
-        const tasks = document.querySelectorAll("#taskList li");
-
-        tasks.forEach(task => {
-          const taskCategory = task.getAttribute("data-category") || "";
-          const matches = category === "All" || taskCategory.toLowerCase() === category.toLowerCase();
-          task.style.display = matches ? "flex" : "none";
-        });
-      }
-
-      let currentTaskElement = null;
-
-      function toggleForm(forceShow = false) {
-        const formBox = document.getElementById("task-form-box");
-        const isVisible = formBox.style.display === "block";
-
-        if (!isVisible || forceShow) {
-          formBox.style.display = "block";
-        } else {
-          formBox.style.display = "none";
-        }
-      }
-
-      function createNewTask() {
-        const formBox = document.getElementById("task-form-box");
-        const isHidden = formBox.style.display === "none" || formBox.style.display === "";
-
-        if (isHidden) {
-          // Reset form only when opening
-          document.getElementById("formTitle").textContent = "Create New Task";
-          document.getElementById("addTaskBtn").textContent = "Add Task";
-          document.getElementById("taskInput").value = "";
-          document.getElementById("taskType").value = "Personal";
-          currentTaskElement = null;
-        }
-
-        toggleForm(); // Toggles form visibility
-      }
-
-      let currentTaskId = null;
-
-      function addTask() {
-        const input = document.getElementById("taskInput").value.trim();
-        const type = document.getElementById("taskType").value;
-
-        if (!input) {
-          alert("Please enter task.");
-          return;
-        }
-
-        if (currentTaskId) {
-          // Update existing task
-          // Make an AJAX call to update the task in the database
-          $.ajax({
-            url: "ajax/tododata.php",
-            type: "POST",
-            data: {
-              action: 'update',
-              id: currentTaskId,
-              title: input,
-              type: type
-            },
-            success: function(response) {
-              alert("Task updated!");
-              location.reload();
-            },
-            error: function() {
-              alert("Something went wrong while updating the task.");
-            }
-          });
-        } else {
-          // Add new task
-          $.ajax({
-            url: "ajax/tododata.php",
-            type: "POST",
-            data: {
-              action: 'add',
-              title: input,
-              type: type
-            },
-            success: function(response) {
-              alert("Task added!");
-              location.reload(); // reload to see new task
-            },
-            error: function() {
-              alert("Something went wrong while adding the task.");
-            }
-          });
-        }
-
-        // Clear and hide form
-        document.getElementById("taskInput").value = "";
-        currentTaskId = null; // Reset the current task ID
-        toggleForm();
-      }
-    </script>
-
-    <script>
-      // Mark task done
-
-      document.querySelectorAll('.task-check').forEach((checkbox) => {
-        checkbox.addEventListener('change', function() {
-          const taskText = this.closest('.form-check').querySelector('.task-text');
-          const listItem = this.closest('li');
-          const taskId = listItem.getAttribute('data-task-id');
-
-          if (!taskId) {
-            alert("Missing task ID.");
-            return;
-          }
-
-          const isChecked = this.checked;
-          const newStatus = isChecked ? 1 : 0;
-
-          // Update visuals
-          taskText.style.textDecoration = isChecked ? "line-through" : "none";
-          taskText.style.color = isChecked ? "#888" : "#000";
-
-          // Send AJAX request
-          $.ajax({
-            url: "ajax/tododata.php",
-            type: "POST",
-            data: {
-              action: 'updateStatus',
-              id: taskId,
-              status: newStatus
-            },
-            success: function(response) {
-              alert(response.message || "❌ Could not update status.");
-              location.reload();
-            },
-            error: function() {
-              alert("Failed to update task status.");
-            }
-          });
-        });
+      tasks.forEach(task => {
+        const taskCategory = task.getAttribute("data-category") || "";
+        const matches = category === "All" || taskCategory.toLowerCase() === category.toLowerCase();
+        task.style.display = matches ? "flex" : "none";
       });
+    }
 
+    let currentTaskElement = null;
 
-      function editTask(button) {
-        const listItem = button.closest('li');
-        const taskTextInput = listItem.querySelector('.task-text');
-        const taskId = listItem.querySelector('.task-id');
-        const taskType = listItem.getAttribute('data-task-type');
+    function toggleForm(forceShow = false) {
+      const formBox = document.getElementById("task-form-box");
+      const isVisible = formBox.style.display === "block";
 
-        const taskInput = document.getElementById("taskInput");
-        const taskTypeSelect = document.getElementById("taskType");
-        const formTitle = document.getElementById("formTitle");
-        const addTaskBtn = document.getElementById("addTaskBtn");
+      if (!isVisible || forceShow) {
+        formBox.style.display = "block";
+      } else {
+        formBox.style.display = "none";
+      }
+    }
 
-        // ✅ Populate form
-        taskInput.value = taskTextInput.value;
-        taskTypeSelect.value = taskType;
+    function createNewTask() {
+      const formBox = document.getElementById("task-form-box");
+      const isHidden = formBox.style.display === "none" || formBox.style.display === "";
 
-        // ✅ Update form text
-        formTitle.textContent = "Update Task";
-        addTaskBtn.textContent = "Update Task";
-
-        currentTaskId = taskId.value;
-
-        // ✅ Show the form
-        toggleForm(true);
+      if (isHidden) {
+        // Reset form only when opening
+        document.getElementById("formTitle").textContent = "Create New Task";
+        document.getElementById("addTaskBtn").textContent = "Add Task";
+        document.getElementById("taskInput").value = "";
+        document.getElementById("taskType").value = "Personal";
+        currentTaskElement = null;
       }
 
-      function deleteTask(button) {
-        const listItem = button.closest('li');
-        const taskId = listItem.getAttribute('data-task-id');
+      toggleForm(); // Toggles form visibility
+    }
 
-        if (!taskId) {
-          alert("Task ID not found.");
-          return;
-        }
+    let currentTaskId = null;
 
-        if (!confirm("Are you sure you want to delete this task?")) return;
+    function addTask() {
+      const input = document.getElementById("taskInput").value.trim();
+      const type = document.getElementById("taskType").value;
 
+      if (!input) {
+        alert("Please enter task.");
+        return;
+      }
+
+      if (currentTaskId) {
+        // Update existing task
+        // Make an AJAX call to update the task in the database
         $.ajax({
           url: "ajax/tododata.php",
           type: "POST",
           data: {
-            action: 'delete',
-            id: taskId
+            action: 'update',
+            id: currentTaskId,
+            title: input,
+            type: type
           },
           success: function(response) {
-            alert(response.message);
+            alert("Task updated!");
             location.reload();
           },
           error: function() {
-            alert("Something went wrong while deleting the task.");
+            alert("Something went wrong while updating the task.");
+          }
+        });
+      } else {
+        // Add new task
+        $.ajax({
+          url: "ajax/tododata.php",
+          type: "POST",
+          data: {
+            action: 'add',
+            title: input,
+            type: type
+          },
+          success: function(response) {
+            alert("Task added!");
+            location.reload(); // reload to see new task
+          },
+          error: function() {
+            alert("Something went wrong while adding the task.");
           }
         });
       }
 
-      function filterTasksCombined() {
-        const searchTerm = document.getElementById("searchTask").value.toLowerCase();
-        const selectedCategory = document.getElementById("categoryFilter").value;
-        const tasks = document.querySelectorAll("#taskList li");
+      // Clear and hide form
+      document.getElementById("taskInput").value = "";
+      currentTaskId = null; // Reset the current task ID
+      toggleForm();
+    }
+  </script>
 
-        tasks.forEach(task => {
-          const taskTextInput = task.querySelector(".task-text");
-          const taskType = task.getAttribute("data-task-type");
+  <script>
+    // Mark task done
 
-          if (!taskTextInput) return;
+    document.querySelectorAll('.task-check').forEach((checkbox) => {
+      checkbox.addEventListener('change', function() {
+        const taskText = this.closest('.form-check').querySelector('.task-text');
+        const listItem = this.closest('li');
+        const taskId = listItem.getAttribute('data-task-id');
 
-          const taskText = taskTextInput.value.toLowerCase();
-          const matchesSearch = taskText.includes(searchTerm);
-          const matchesCategory = selectedCategory === "All" || taskType === selectedCategory;
+        if (!taskId) {
+          alert("Missing task ID.");
+          return;
+        }
 
-          console.log("Search:", searchTerm, "Category:", selectedCategory);
-          console.log("Text:", taskText, "Type:", taskType);
+        const isChecked = this.checked;
+        const newStatus = isChecked ? 1 : 0;
 
-          // ✅ Only show if BOTH filters match
-          if (matchesSearch && matchesCategory) {
-            task.classList.remove("d-none");
-          } else {
-            task.classList.add("d-none");
+        // Update visuals
+        taskText.style.textDecoration = isChecked ? "line-through" : "none";
+        taskText.style.color = isChecked ? "#888" : "#000";
+
+        // Send AJAX request
+        $.ajax({
+          url: "ajax/tododata.php",
+          type: "POST",
+          data: {
+            action: 'updateStatus',
+            id: taskId,
+            status: newStatus
+          },
+          success: function(response) {
+            alert(response.message || "❌ Could not update status.");
+            location.reload();
+          },
+          error: function() {
+            alert("Failed to update task status.");
           }
         });
-      }
-
-      // Attach event listeners AFTER DOM is loaded
-      document.addEventListener("DOMContentLoaded", function() {
-        document.getElementById("searchTask").addEventListener("keyup", filterTasksCombined);
-        document.getElementById("categoryFilter").addEventListener("change", filterTasksCombined);
       });
-    </script>
+    });
 
-    <script>
-      const userName = "<?php echo htmlspecialchars($_SESSION['username'] ?? 'User'); ?>";
 
-      function getGreeting() {
-        const hour = new Date().getHours();
-        if (hour < 12) return "Good Morning";
-        if (hour < 17) return "Good Afternoon";
-        return "Good Evening";
+    function editTask(button) {
+      const listItem = button.closest('li');
+      const taskTextInput = listItem.querySelector('.task-text');
+      const taskId = listItem.querySelector('.task-id');
+      const taskType = listItem.getAttribute('data-task-type');
+
+      const taskInput = document.getElementById("taskInput");
+      const taskTypeSelect = document.getElementById("taskType");
+      const formTitle = document.getElementById("formTitle");
+      const addTaskBtn = document.getElementById("addTaskBtn");
+
+      // ✅ Populate form
+      taskInput.value = taskTextInput.value;
+      taskTypeSelect.value = taskType;
+
+      // ✅ Update form text
+      formTitle.textContent = "Update Task";
+      addTaskBtn.textContent = "Update Task";
+
+      currentTaskId = taskId.value;
+
+      // ✅ Show the form
+      toggleForm(true);
+    }
+
+    function deleteTask(button) {
+      const listItem = button.closest('li');
+      const taskId = listItem.getAttribute('data-task-id');
+
+      if (!taskId) {
+        alert("Task ID not found.");
+        return;
       }
 
-      function updateHeader() {
-        const now = new Date();
-        const weekdayFull = now.toLocaleDateString('en-GB', {
-          weekday: 'short'
-        }); // e.g. "Thu"
-        const day = now.getDate();
-        const month = now.toLocaleDateString('en-GB', {
-          month: 'long'
-        });
-        const year = now.getFullYear();
+      if (!confirm("Are you sure you want to delete this task?")) return;
 
-        const weekdayDisplay = (weekdayFull === "Thu") ? "Thurs" : weekdayFull;
+      $.ajax({
+        url: "ajax/tododata.php",
+        type: "POST",
+        data: {
+          action: 'delete',
+          id: taskId
+        },
+        success: function(response) {
+          alert(response.message);
+          location.reload();
+        },
+        error: function() {
+          alert("Something went wrong while deleting the task.");
+        }
+      });
+    }
 
-        const finalDateStr = `${weekdayDisplay} ${day} ${month} ${year}`;
+    function filterTasksCombined() {
+      const searchTerm = document.getElementById("searchTask").value.toLowerCase();
+      const selectedCategory = document.getElementById("categoryFilter").value;
+      const tasks = document.querySelectorAll("#taskList li");
 
-        document.getElementById('greeting').textContent = `${getGreeting()}, ${userName} 👋`;
-        document.getElementById('dateOnly').textContent = `Today, ${finalDateStr}`;
-      }
+      tasks.forEach(task => {
+        const taskTextInput = task.querySelector(".task-text");
+        const taskType = task.getAttribute("data-task-type");
 
-      updateHeader();
-      setInterval(updateHeader, 60000);
-    </script>
+        if (!taskTextInput) return;
+
+        const taskText = taskTextInput.value.toLowerCase();
+        const matchesSearch = taskText.includes(searchTerm);
+        const matchesCategory = selectedCategory === "All" || taskType === selectedCategory;
+
+        console.log("Search:", searchTerm, "Category:", selectedCategory);
+        console.log("Text:", taskText, "Type:", taskType);
+
+        // ✅ Only show if BOTH filters match
+        if (matchesSearch && matchesCategory) {
+          task.classList.remove("d-none");
+        } else {
+          task.classList.add("d-none");
+        }
+      });
+    }
+
+    // Attach event listeners AFTER DOM is loaded
+    document.addEventListener("DOMContentLoaded", function() {
+      document.getElementById("searchTask").addEventListener("keyup", filterTasksCombined);
+      document.getElementById("categoryFilter").addEventListener("change", filterTasksCombined);
+    });
+  </script>
+
+  <script>
+    const userName = "<?php echo htmlspecialchars($_SESSION['username'] ?? 'User'); ?>";
+
+    function getGreeting() {
+      const hour = new Date().getHours();
+      if (hour < 12) return "Good Morning";
+      if (hour < 17) return "Good Afternoon";
+      return "Good Evening";
+    }
+
+    function updateHeader() {
+      const now = new Date();
+      const weekdayFull = now.toLocaleDateString('en-GB', {
+        weekday: 'short'
+      }); // e.g. "Thu"
+      const day = now.getDate();
+      const month = now.toLocaleDateString('en-GB', {
+        month: 'long'
+      });
+      const year = now.getFullYear();
+
+      const weekdayDisplay = (weekdayFull === "Thu") ? "Thurs" : weekdayFull;
+
+      const finalDateStr = `${weekdayDisplay} ${day} ${month} ${year}`;
+
+      document.getElementById('greeting').textContent = `${getGreeting()}, ${userName} 👋`;
+      document.getElementById('dateOnly').textContent = `Today, ${finalDateStr}`;
+    }
+
+    updateHeader();
+    setInterval(updateHeader, 60000);
+  </script>
 
 </body>
 
