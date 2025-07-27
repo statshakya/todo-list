@@ -56,13 +56,13 @@ $tododones = $todo->getAll_active($userid);
       border: 1px solidrgb(221, 195, 243);
     }
 
-    .dropdown-item {
-      color: rgb(218, 190, 241);
+   .dropdown-item {
+      color:rgba(0, 0, 0, 1);
     }
 
     .dropdown-item:hover {
       background-color: #f1dafc;
-      color: rgb(219, 186, 255);
+      color:rgba(61, 60, 63, 1);
     }
 
     body {

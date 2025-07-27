@@ -329,6 +329,7 @@ $notesdata = $notes->getAll($userid);
         dataType: 'json',
         success: function(response) {
           if (response.status === 'success') {
+             alert(response.message);
             location.reload();
           } else {
             alert(response.message || "An error occurred.");
