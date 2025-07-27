@@ -150,7 +150,7 @@ $tododones = $todo->getAll_active($userid);
     }
 
     .form-check-input {
-      margin-top: 12px !important;
+      margin-top: 14px !important;
     }
   </style>
 
@@ -223,7 +223,8 @@ $tododones = $todo->getAll_active($userid);
         <li class="list-group-item d-flex align-items-center justify-content-between" data-task-type="<?= $todo->type ?>" data-task-id="<?= $todo->id ?>">
           <div class="form-check">
             <input class="form-check-input task-check" type="checkbox" id="<?= $taskId ?>">
-            <input type="text" class="form-control-plaintext ms-2 task-text" value="<?= htmlspecialchars($todo->title) ?>" readonly>
+            <input type="text" class="form-control-plaintext ms-2 task-text d-none" value="<?= htmlspecialchars($todo->title) ?>" readonly>
+            <p class="mt-2"><?= htmlspecialchars($todo->title) ?> (<?= htmlspecialchars($todo->type) ?>)</p>
             <input type="hidden" class="task-id" value="<?= $todo->id ?>">
           </div>
           <div>
@@ -238,8 +239,9 @@ $tododones = $todo->getAll_active($userid);
         <li class="list-group-item d-flex align-items-center justify-content-between" data-task-type="<?= $todo->type ?>" data-task-id="<?= $todo->id ?>">
           <div class="form-check">
             <input class="form-check-input task-check" type="checkbox" id="<?= $taskId ?>" checked>
-            <input type="text" class="form-control-plaintext ms-2 task-text" value="<?= htmlspecialchars($todo->title) ?>" readonly
+            <input type="text" class="form-control-plaintext ms-2 task-text d-none" value="<?= htmlspecialchars($todo->title) ?>" readonly
               style="text-decoration: line-through; color: rgb(136, 136, 136);">
+            <p class="mt-2" style="text-decoration: line-through; color: rgb(136, 136, 136);"><?= htmlspecialchars($todo->title) ?> (<?= htmlspecialchars($todo->type) ?>)</p>
             <input type="hidden" class="task-id" value="<?= $todo->id ?>">
           </div>
           <div>
