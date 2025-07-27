@@ -1,7 +1,6 @@
 -- SMS 2025-07-24
 ALTER TABLE `tbl_tododata` ADD `type` VARCHAR(50) NOT NULL AFTER `title`; 
 
--- sahas 2025-07-26
 -- Adminer 4.8.1 MySQL 9.2.0 dump
 
 SET NAMES utf8;

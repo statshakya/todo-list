@@ -21,6 +21,7 @@ $currentUser = $user->getById($_SESSION['user_id']); // fetch current data
 
     <!-- Google Font: Quick Sand -->
     <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Caveat&family=Work+Sans:wght@300&display=swap" rel="stylesheet">
 
     <!-- font awesome (https://fontawesome.com) for basic icons; source: https://cdnjs.com/libraries/font-awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0-2/css/all.min.css"
@@ -31,7 +32,8 @@ $currentUser = $user->getById($_SESSION['user_id']); // fetch current data
     <link rel="stylesheet" href="CSS/corner.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <title>JUST DO IT</title>
+    <title>Profile | PlanPal</title>
+    
 
 </head>
 <style>
@@ -85,14 +87,41 @@ $currentUser = $user->getById($_SESSION['user_id']); // fetch current data
       color:rgb(219, 186, 255);
     }
 
+   .btn-lavender {
+  background-color: #af8ece;
+  color: black;
+  border: none;
+}
+.btn-lavender:hover {
+  background-color: #efa5fdff;
+}
+.navbar-brand {
+      font-family: 'Caveat', cursive;
+      font-size: 2rem;
+      color: #fff;
+    }
+
+body, html {
+  margin: 0;
+  padding: 0; 
+}
+
+   @keyframes bounce {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-20px);
+      }
+    }
 </style>
 
 <body>
-    <body>
+    
 
   <nav class="navbar navbar-expand-lg" style="width: 100%;">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#">PlanPal</a>
+      <a class="navbar-brand" href="index.php">PlanPal</a>
       <div class="collapse navbar-collapse justify-content-end">
         <ul class="navbar-nav">
           <li class="nav-item dropdown">
@@ -114,11 +143,13 @@ $currentUser = $user->getById($_SESSION['user_id']); // fetch current data
     </div>
   </nav>
 
-    <div id="header">
-        </div>
-        <h1>Your Profile<div id="border"></div>
-        </h1>
-    </div><b></b>
+  <div id="header">
+    <div style="text-align: center; margin-bottom: 10px;">
+      <img src="images/Elephant.png" alt="Cute Baby Elephant" 
+           style="max-width: 150px; height: auto; animation: bounce 2.5s infinite ease-in-out;">
+    </div>
+    <h2>Your Profile</h2>
+  </div><b></b>
  <!-- #region -->
 <div class="container mt-5">
   <div class="row justify-content-center">
@@ -155,16 +186,13 @@ $currentUser = $user->getById($_SESSION['user_id']); // fetch current data
           </div>
 
           <div id="profile_msg" class="mb-3"></div>
-          <button type="submit" id="save-profile" class="btn btn-outline-light w-100">I Got This!</button>
+          <button type="submit" id="save-profile" class="btn btn-lavender w-100">Submit</button>
         </form>
       </div>
     </div>
   </div>
 </div>
-
-
-    <!-- div for top left corner -->
-
+ 
     
     <script src="JS/main.js" type="text/javascript"> </script>
     <script src="js/jquery.min.js" type="text/javascript"> </script>
@@ -229,109 +257,3 @@ jQuery(document).ready(function () {
    <script>
 
     
-// jQuery(document).ready(function ($) {
-//     // Store original values
-//     const originalValues = {
-//         name: $('#name').val(),
-//         email: $('#email').val(),
-//         username: $('#username').val()
-//     };
-
-//     $('#profile-form').validate({
-//         errorElement: 'span',
-//         errorClass: 'validate-has-error',
-//         errorPlacement: function(error, element) {
-//             error.insertAfter(element);
-//         },
-//         rules: {
-//             name: { 
-//                 required: true, 
-//                 minlength: 2 
-//             },
-//             email: {
-//                 required: true,
-//                 email: true,
-//                 remote: {
-//                     url: "ajax/tododata.php",
-//                     type: "post",
-//                     dataType: 'json',
-//                     data: {
-//                         action: "checkEmail",
-//                         email: function() {
-//                             // Only validate if email changed
-//                             const currentEmail = $('#email').val();
-//                             return currentEmail !== originalValues.email ? currentEmail : "no-change";
-//                         },
-//                         current_id: function() {
-//                             return $('[name="id"]').val();
-//                         }
-//                     }
-//                 }
-//             },
-//             username: {
-//                 required: true,
-//                 minlength: 2,
-//                 remote: {
-//                     url: "ajax/tododata.php",
-//                     type: "post",
-//                     dataType: 'json',
-//                     data: {
-//                         action: "checkUsername",
-//                         username: function() {
-//                             // Only validate if username changed
-//                             const currentUsername = $('#username').val();
-//                             return currentUsername !== originalValues.username ? currentUsername : "no-change";
-//                         },
-//                         current_id: function() {
-//                             return $('[name="id"]').val();
-//                         }
-//                     }
-//                 }
-//             },
-//             password: {
-//                 minlength: 4
-//             },
-//             confirm_password: {
-//                 equalTo: '[name="password"]'
-//             }
-//         },
-//         messages: {
-//             email: { 
-//                 remote: "Email already in use",
-//                 required: "Email is required"
-//             },
-//             username: { 
-//                 remote: "Username already taken",
-//                 required: "Username is required"
-//             },
-//             confirm_password: { 
-//                 equalTo: "Passwords do not match" 
-//             }
-//         },
-//         onkeyup: function(element) {
-//             // Only validate on keyup if the field has changed
-//             if ($(element).val() !== originalValues[element.name]) {
-//                 $(element).valid();
-//             }
-//         },
-//         submitHandler: function(form) {
-//             // Your existing submit handler code
-//             // ...
-//         }
-//     });
-
-//     // Add custom method to skip validation for unchanged fields
-//     $.validator.addMethod("skipIfUnchanged", function(value, element) {
-//         const fieldName = $(element).attr('name');
-//         return value === originalValues[fieldName] || this.optional(element);
-//     }, "");
-
-//     // Update validation when fields change
-//     $('#profile-form input').on('change', function() {
-//         $(this).valid();
-//     });
-// });
-   </script>
-</body>
-
-</html>
