@@ -44,9 +44,7 @@ $todaysEventsCount = count($todaysEvents);
 <link href="https://fonts.googleapis.com/css2?family=Caveat&family=Work+Sans:wght@300&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0-2/css/all.min.css" integrity="sha256-46r060N2LrChLLb5zowXQ72/iKKNiw/lAmygmHExk/o=" crossorigin="anonymous" />
 
-
 <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3468/3468371.png" type="image/x-icon" />
-
 
 <link rel="stylesheet" href="CSS/main.css">
 <link rel="stylesheet" href="CSS/corner.css">
@@ -279,12 +277,8 @@ $todaysEventsCount = count($todaysEvents);
   </nav>
 
   <div style="padding: 10px 20px; background-color: #fff;">
-    <h2 style="color: #333333; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin-bottom: 0;" id="greeting">
-
-    </h2>
-    <p style="color: #555555; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 1rem;" id="dateOnly">
-
-    </p>
+    <h2 style="color: #333333; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin-bottom: 0;" id="greeting"></h2>
+    <p style="color: #555555; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 1rem;" id="dateOnly"></p>
   </div>
 
   <div class="container mt-4">
@@ -308,8 +302,6 @@ $todaysEventsCount = count($todaysEvents);
 
         <div class="card-link">Manage Todos →</div>
       </div>
-
-
 
       <div class="dashboard-card" onclick="location.href='notes.php'" style="cursor: pointer;">
         <div class="card-icon">📒</div>

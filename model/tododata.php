@@ -54,17 +54,6 @@ class Todo
         return $stmt->execute([$title, $type, $userid]);
     }
 
-
-
-
-    //    public function update($id, $title, $status) {
-    //     $stmt = $this->conn->prepare("
-    //         UPDATE {$this->table}
-    //         SET title = ?, status = ?, updated_date = NOW()
-    //         WHERE id = ?
-    //     ");
-    //     return $stmt->execute([$title, $status, $id]);
-    // }
     public function update($id, $title, $type)
     {
         $sql = "UPDATE {$this->table} SET title = ?, type = ?, updated_date = NOW() WHERE id = ?";
@@ -81,7 +70,6 @@ class Todo
         ");
         return $stmt->execute([$status, $id]);
     }
-
 
     public function delete($id)
     {

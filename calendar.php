@@ -8,8 +8,6 @@ $conn = $db->connect();
 $calendar = new Calendar($conn);
 $userid = $_SESSION['user_id'];
 $events = $calendar->getAll($userid);
-
-
 ?>
 
 <!DOCTYPE html>
@@ -201,8 +199,6 @@ $events = $calendar->getAll($userid);
 
   <div class="container mt-4">
     <!-- Search Bar -->
-    
-
     <div class="d-flex align-items-center justify-content-start gap-2 mb-3">
       <button id="showAllBtn" class="btn btn-secondary">All</button>
 
@@ -478,16 +474,16 @@ $events = $calendar->getAll($userid);
     </script>
     <?php
     if (isset($_GET['focus']) && $_GET['focus'] === 'today') {
-    $today = date('Y-m-d');
-    // Set the date filter inputs to today's date
-    echo "<script>
+      $today = date('Y-m-d');
+      // Set the date filter inputs to today's date
+      echo "<script>
         document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('dateFilterin').value = '$today';
             document.getElementById('dateFilterout').value = '$today';
             filterEvents();
         });
     </script>";
-}
+    }
     ?>
 </body>
 

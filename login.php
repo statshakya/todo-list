@@ -288,7 +288,7 @@ session_start();
                             if (response.status === "success") {
                                 jQuery('#login_msg').css("color", "green").html(response.message).fadeIn();
                                 setTimeout(function() {
-                                    window.location.href = "dashboard.php"; 
+                                    window.location.href = "dashboard.php";
                                 }, 2000);
                             } else {
                                 jQuery('#login_msg').css("color", "red").html(response.message).fadeIn();

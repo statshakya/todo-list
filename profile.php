@@ -194,7 +194,6 @@ body, html {
 </div>
  
     
-    <script src="JS/main.js" type="text/javascript"> </script>
     <script src="js/jquery.min.js" type="text/javascript"> </script>
     <script src="js/jquery.validate.js" type="text/javascript"> </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -253,7 +252,3 @@ jQuery(document).ready(function () {
     });
 });
 </script>
-
-   <script>
-
-    

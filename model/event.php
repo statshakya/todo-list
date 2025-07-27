@@ -9,7 +9,8 @@ class calendar
         $this->conn = $db;
     }
 
-     public function getAll($userid) {
+    public function getAll($userid)
+    {
         try {
             $stmt = $this->conn->prepare("SELECT * FROM {$this->table} WHERE user_id = :userid ORDER BY event_date DESC, created_date DESC");
             $stmt->bindParam(':userid', $userid);

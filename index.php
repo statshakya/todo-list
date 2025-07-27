@@ -56,13 +56,13 @@ $tododones = $todo->getAll_active($userid);
       border: 1px solidrgb(221, 195, 243);
     }
 
-   .dropdown-item {
-      color:rgba(0, 0, 0, 1);
+    .dropdown-item {
+      color: rgba(0, 0, 0, 1);
     }
 
     .dropdown-item:hover {
       background-color: #f1dafc;
-      color:rgba(61, 60, 63, 1);
+      color: rgba(61, 60, 63, 1);
     }
 
     body {
@@ -270,13 +270,9 @@ $tododones = $todo->getAll_active($userid);
     <button class="floating-btn" onclick="createNewTask()">Create a Task +</button>
 
 
-    <!-- <p><span id="datetime"></span></p> -->
-
-    <!-- <script src="JS/time.js"></script> -->
     <script src="js/jquery.min.js"></script>
     <script src="js/jquery.validate.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- <script src="JS/todo.js"></script> -->
 
     <script>
       function filterTasks(category) {

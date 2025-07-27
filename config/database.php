@@ -1,12 +1,14 @@
 <?php
-class Database {
+class Database
+{
     private $host = "localhost";
     private $db_name = "todolist";
     private $username = "root";
     private $password = "";
     private $conn;
 
-    public function connect() {
+    public function connect()
+    {
         if ($this->conn) return $this->conn;
 
         try {

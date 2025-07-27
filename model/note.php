@@ -31,39 +31,6 @@ class Note
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    // Handle file upload
-    private function handleFileUpload($file)
-    {
-        if (!$file || !isset($file['name']) || empty($file['name'])) {
-            return null;
-        }
-
-        // Validate file
-        $allowedTypes = ['image/jpeg', 'image/png', 'application/pdf', 'text/plain'];
-        $maxSize = 5 * 1024 * 1024; // 5MB
-
-        if (!in_array($file['type'], $allowedTypes)) {
-            throw new Exception("Invalid file type. Only JPG, PNG, PDF, and TXT files are allowed.");
-        }
-
-        if ($file['size'] > $maxSize) {
-            throw new Exception("File size exceeds maximum limit of 5MB.");
-        }
-
-        // Generate unique filename
-        $fileExt = pathinfo($file['name'], PATHINFO_EXTENSION);
-        $fileName = uniqid('note_') . '.' . $fileExt;
-        $filePath = $this->uploadDir . $fileName;
-
-        // Move uploaded file
-        if (!move_uploaded_file($file['tmp_name'], $filePath)) {
-            throw new Exception("Failed to upload file.");
-        }
-
-        // Return full relative path instead of just filename
-        return 'uploads/notes/' . $fileName;
-    }
-
     // Create a new note with file upload handling
     public function create($title, $content, $userid, $file = null)
     {
