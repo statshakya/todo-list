@@ -36,6 +36,18 @@ $notesdata = $notes->getAll($userid);
   <title>Notes | PlanPal</title>
 
   <style>
+    html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+body > .container {
+  flex: 1;
+}
+
     body {
       font-family: 'Work Sans', sans-serif;
       background-color: #f8f2fc;
@@ -58,12 +70,21 @@ $notesdata = $notes->getAll($userid);
     }
 
     .dropdown-item {
-      color: rgb(218, 190, 241);
+      color: rgba(0, 0, 0, 1);
     }
 
     .dropdown-item:hover {
       background-color: #f1dafc;
-      color: rgb(219, 186, 255);
+      color: rgba(61, 60, 63, 1);
+    }
+
+    .footer {
+      background: #d6a4f0;
+      color: white;
+      text-align: center;
+      padding: 20px;
+      width: 100%;
+      margin-top: 50px;
     }
 
     body {
@@ -82,7 +103,7 @@ $notesdata = $notes->getAll($userid);
 
     .floating-btn {
       position: fixed;
-      bottom: 20px;
+      bottom: 70px;
       left: 50%;
       transform: translateX(-50%);
       background-color: #af8ece;
@@ -97,7 +118,7 @@ $notesdata = $notes->getAll($userid);
 
     .note-form-box {
       position: fixed;
-      bottom: 90px;
+      bottom: 140px;
       left: 50%;
       transform: translateX(-50%);
       background: white;
@@ -167,7 +188,7 @@ $notesdata = $notes->getAll($userid);
 
   <nav class="navbar navbar-expand-lg" style="width: 100%;">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#">PlanPal</a>
+      <a class="navbar-brand" href="dashboard.php">PlanPal</a>
       <div class="collapse navbar-collapse justify-content-end">
         <ul class="navbar-nav">
           <li class="nav-item dropdown">
@@ -264,7 +285,7 @@ $notesdata = $notes->getAll($userid);
     <!-- Floating Button -->
     <button class="floating-btn" onclick="toggleNoteForm()">Create a Note +</button>
   </div>
-
+  <?php include 'footer.php'; ?>
   <script src="js/jquery.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 

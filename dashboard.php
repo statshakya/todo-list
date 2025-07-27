@@ -69,6 +69,16 @@ $todaysEventsCount = count($todaysEvents);
       color: #fff;
     }
 
+    .footer {
+      background: #d6a4f0;
+      color: white;
+      text-align: center;
+      padding: 20px;
+      width: 100%;
+      margin-top: 50px;
+    }
+
+
     .dropdown-menu {
       background-color: #fff0fc;
       border: 1px solidrgb(221, 195, 243);
@@ -363,5 +373,6 @@ $todaysEventsCount = count($todaysEvents);
     setInterval(updateHeader, 60000);
   </script>
 </body>
+<?php include 'footer.php'; ?>
 
 </html>

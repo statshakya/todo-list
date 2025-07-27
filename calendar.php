@@ -34,6 +34,19 @@ $events = $calendar->getAll($userid);
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
   <style>
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    body>.container {
+      flex: 1;
+    }
+
     body {
       font-family: 'Work Sans', sans-serif;
       background-color: #f8f2fc;
@@ -56,12 +69,12 @@ $events = $calendar->getAll($userid);
     }
 
     .dropdown-item {
-      color: rgb(218, 190, 241);
+      color: rgba(0, 0, 0, 1);
     }
 
     .dropdown-item:hover {
       background-color: #f1dafc;
-      color: rgb(219, 186, 255);
+      color: rgba(61, 60, 63, 1);
     }
 
     body {
@@ -80,7 +93,7 @@ $events = $calendar->getAll($userid);
 
     .floating-btn {
       position: fixed;
-      bottom: 20px;
+      bottom: 70px;
       left: 50%;
       transform: translateX(-50%);
       background-color: #af8ece;
@@ -95,7 +108,7 @@ $events = $calendar->getAll($userid);
 
     .event-form-box {
       position: fixed;
-      bottom: 90px;
+      bottom: 140px;
       left: 50%;
       transform: translateX(-50%);
       background: white;
@@ -152,6 +165,15 @@ $events = $calendar->getAll($userid);
       color: #7c3aed;
       font-weight: bold;
     }
+
+    .footer {
+      background: #d6a4f0;
+      color: white;
+      text-align: center;
+      padding: 20px;
+      width: 100%;
+      margin-top: 50px;
+    }
   </style>
 
   <title>Events | PlanPal</title>
@@ -197,7 +219,8 @@ $events = $calendar->getAll($userid);
     </p>
   </div>
 
-  <div class="container mt-4">
+  <!-- With this: -->
+  <div class="container mt-4" style="flex: 1;">
     <!-- Search Bar -->
     <div class="d-flex align-items-center justify-content-start gap-2 mb-3">
       <button id="showAllBtn" class="btn btn-secondary">All</button>
@@ -247,244 +270,247 @@ $events = $calendar->getAll($userid);
 
     <!-- Floating Button -->
     <button class="floating-btn" onclick="showEventForm()">Create an Event +</button>
+  </div>
+  <?php include 'footer.php'; ?>
+  </div>
+  <script src="js/jquery.min.js"></script>
+  <script src="js/jquery.validate.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-    <script src="js/jquery.min.js"></script>
-    <script src="js/jquery.validate.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    let currentEventId = null;
 
-    <script>
-      let currentEventId = null;
+    function showEventForm() {
+      const formBox = document.getElementById("event-form-box");
+      const isHidden = formBox.style.display === "none" || formBox.style.display === "";
 
-      function showEventForm() {
-        const formBox = document.getElementById("event-form-box");
-        const isHidden = formBox.style.display === "none" || formBox.style.display === "";
-
-        if (isHidden) {
-          // Reset form only when opening
-          document.getElementById("formTitle").textContent = "Create New Event";
-          document.getElementById("saveEventBtn").textContent = "Add Event";
-          document.getElementById("eventInput").value = "";
-          document.getElementById("eventDate").value = new Date().toISOString().split('T')[0];
-          currentEventId = null;
-        }
-
-        toggleForm(); // Toggles form visibility
+      if (isHidden) {
+        // Reset form only when opening
+        document.getElementById("formTitle").textContent = "Create New Event";
+        document.getElementById("saveEventBtn").textContent = "Add Event";
+        document.getElementById("eventInput").value = "";
+        document.getElementById("eventDate").value = new Date().toISOString().split('T')[0];
+        currentEventId = null;
       }
 
-      function toggleForm(forceShow = false) {
-        const formBox = document.getElementById("event-form-box");
-        const isVisible = formBox.style.display === "block";
+      toggleForm(); // Toggles form visibility
+    }
 
-        if (!isVisible || forceShow) {
-          formBox.style.display = "block";
-        } else {
-          formBox.style.display = "none";
-        }
+    function toggleForm(forceShow = false) {
+      const formBox = document.getElementById("event-form-box");
+      const isVisible = formBox.style.display === "block";
+
+      if (!isVisible || forceShow) {
+        formBox.style.display = "block";
+      } else {
+        formBox.style.display = "none";
+      }
+    }
+
+    function saveEvent() {
+      const titleInput = document.getElementById("eventInput");
+      const dateInput = document.getElementById("eventDate");
+
+      if (!titleInput || !dateInput) {
+        alert("Form elements not found.");
+        return;
       }
 
-      function saveEvent() {
-        const titleInput = document.getElementById("eventInput");
-        const dateInput = document.getElementById("eventDate");
+      const title = titleInput.value.trim();
+      const date = dateInput.value;
 
-        if (!titleInput || !dateInput) {
-          alert("Form elements not found.");
-          return;
-        }
-
-        const title = titleInput.value.trim();
-        const date = dateInput.value;
-
-        if (!title || !date) {
-          alert("Please fill in all fields.");
-          return;
-        }
-
-        const action = currentEventId ? 'update' : 'add';
-        const data = {
-          action: action,
-          title: title,
-          event_date: date,
-          user_id: <?php echo json_encode($_SESSION['user_id'] ?? 0); ?>
-        };
-
-        if (currentEventId) {
-          data.id = currentEventId;
-        }
-
-        $.ajax({
-          url: "ajax/calendar.php",
-          type: "POST",
-          data: data,
-          success: function(response) {
-            if (response.status === 'success') {
-              alert(response.message);
-              location.reload();
-            } else {
-              alert(response.message || "Operation failed");
-            }
-          },
-          error: function(xhr, status, error) {
-            alert("Error: " + error);
-            console.error(xhr.responseText);
-          }
-        });
+      if (!title || !date) {
+        alert("Please fill in all fields.");
+        return;
       }
 
-      function editEvent(button) {
-        const listItem = button.closest('li');
-        const eventId = listItem.getAttribute('data-event-id');
-        const eventTitle = listItem.querySelector('.event-title').textContent;
-        const eventDate = listItem.getAttribute('data-event-date');
+      const action = currentEventId ? 'update' : 'add';
+      const data = {
+        action: action,
+        title: title,
+        event_date: date,
+        user_id: <?php echo json_encode($_SESSION['user_id'] ?? 0); ?>
+      };
 
-        document.getElementById("eventInput").value = eventTitle;
-        document.getElementById("eventDate").value = eventDate;
-        document.getElementById("formTitle").textContent = "Edit Event";
-        document.getElementById("saveEventBtn").textContent = "Update Event";
-
-        currentEventId = eventId;
-        toggleForm(true);
+      if (currentEventId) {
+        data.id = currentEventId;
       }
 
-      function deleteEvent(button) {
-        const listItem = button.closest('li');
-        const eventId = listItem.getAttribute('data-event-id');
-
-        if (!confirm("Are you sure you want to delete this event?")) return;
-
-        $.ajax({
-          url: "ajax/calendar.php",
-          type: "POST",
-          data: {
-            action: 'delete',
-            id: eventId
-          },
-          success: function(response) {
-            alert(response.message || "Event deleted!");
+      $.ajax({
+        url: "ajax/calendar.php",
+        type: "POST",
+        data: data,
+        success: function(response) {
+          if (response.status === 'success') {
+            alert(response.message);
             location.reload();
-          },
-          error: function() {
-            alert("Something went wrong while deleting the event.");
-          }
-        });
-      }
-
-      function filterEvents() {
-        const searchInput = document.getElementById("searchEvent");
-        const dateIn = document.getElementById("dateFilterin");
-        const dateOut = document.getElementById("dateFilterout");
-        const eventList = document.getElementById("eventList");
-
-        const searchTerm = searchInput.value.trim().toLowerCase();
-        const dateInValue = dateIn.value;
-        const dateOutValue = dateOut.value;
-        const events = eventList.querySelectorAll("li");
-
-        events.forEach(event => {
-          const eventTitle = event.querySelector(".event-title").textContent.toLowerCase();
-          const eventDate = event.getAttribute("data-event-date");
-
-          // Search filter
-          const matchesSearch = searchTerm === '' || eventTitle.includes(searchTerm);
-
-          // Date range filter
-          const matchesDate = (dateInValue === '' || eventDate >= dateInValue) &&
-            (dateOutValue === '' || eventDate <= dateOutValue);
-
-          // Show/hide
-          if (matchesSearch && matchesDate) {
-            event.style.cssText = "display: flex !important";
           } else {
-            event.style.cssText = "display: none !important";
+            alert(response.message || "Operation failed");
           }
-        });
-      }
-
-      function resetFilters() {
-        // Clear both filters
-        document.getElementById("dateFilterin").value = '';
-        document.getElementById("dateFilterout").value = '';
-        document.getElementById("searchEvent").value = '';
-        // Show all events
-        filterEvents();
-      }
-
-      document.addEventListener("DOMContentLoaded", function() {
-        // Initialize date filter with today's date
-        const showAllBtn = document.getElementById("showAllBtn");
-        const dateFilter = document.getElementById("dateFilterin");
-        const dateFilterout = document.getElementById("dateFilterout");
-        const searchInput = document.getElementById("searchEvent");
-
-        // Set default date to empty (shows all events)
-        dateFilter.value = '';
-        dateFilterout.value = '';
-
-        // Add event listeners
-        showAllBtn.addEventListener("click", resetFilters);
-        dateFilter.addEventListener("change", filterEvents);
-        dateFilterout.addEventListener("change", filterEvents);
-        searchInput.addEventListener("keyup", filterEvents);
-
-        // Apply initial filter (shows all events)
-        filterEvents();
-
-        // Check if we should show the form after reload
-        if (sessionStorage.getItem('showEventForm') === 'true') {
-          showEventForm();
-          sessionStorage.removeItem('showEventForm');
+        },
+        error: function(xhr, status, error) {
+          alert("Error: " + error);
+          console.error(xhr.responseText);
         }
-
-        // Header initialization
-        updateHeader();
-        setInterval(updateHeader, 60000);
       });
-    </script>
+    }
 
-    <script>
-      const userName = "<?php echo htmlspecialchars($_SESSION['username'] ?? 'User'); ?>";
+    function editEvent(button) {
+      const listItem = button.closest('li');
+      const eventId = listItem.getAttribute('data-event-id');
+      const eventTitle = listItem.querySelector('.event-title').textContent;
+      const eventDate = listItem.getAttribute('data-event-date');
 
-      function getGreeting() {
-        const hour = new Date().getHours();
-        if (hour < 12) return "Good morning";
-        if (hour < 17) return "Good afternoon";
-        return "Good evening";
+      document.getElementById("eventInput").value = eventTitle;
+      document.getElementById("eventDate").value = eventDate;
+      document.getElementById("formTitle").textContent = "Edit Event";
+      document.getElementById("saveEventBtn").textContent = "Update Event";
+
+      currentEventId = eventId;
+      toggleForm(true);
+    }
+
+    function deleteEvent(button) {
+      const listItem = button.closest('li');
+      const eventId = listItem.getAttribute('data-event-id');
+
+      if (!confirm("Are you sure you want to delete this event?")) return;
+
+      $.ajax({
+        url: "ajax/calendar.php",
+        type: "POST",
+        data: {
+          action: 'delete',
+          id: eventId
+        },
+        success: function(response) {
+          alert(response.message || "Event deleted!");
+          location.reload();
+        },
+        error: function() {
+          alert("Something went wrong while deleting the event.");
+        }
+      });
+    }
+
+    function filterEvents() {
+      const searchInput = document.getElementById("searchEvent");
+      const dateIn = document.getElementById("dateFilterin");
+      const dateOut = document.getElementById("dateFilterout");
+      const eventList = document.getElementById("eventList");
+
+      const searchTerm = searchInput.value.trim().toLowerCase();
+      const dateInValue = dateIn.value;
+      const dateOutValue = dateOut.value;
+      const events = eventList.querySelectorAll("li");
+
+      events.forEach(event => {
+        const eventTitle = event.querySelector(".event-title").textContent.toLowerCase();
+        const eventDate = event.getAttribute("data-event-date");
+
+        // Search filter
+        const matchesSearch = searchTerm === '' || eventTitle.includes(searchTerm);
+
+        // Date range filter
+        const matchesDate = (dateInValue === '' || eventDate >= dateInValue) &&
+          (dateOutValue === '' || eventDate <= dateOutValue);
+
+        // Show/hide
+        if (matchesSearch && matchesDate) {
+          event.style.cssText = "display: flex !important";
+        } else {
+          event.style.cssText = "display: none !important";
+        }
+      });
+    }
+
+    function resetFilters() {
+      // Clear both filters
+      document.getElementById("dateFilterin").value = '';
+      document.getElementById("dateFilterout").value = '';
+      document.getElementById("searchEvent").value = '';
+      // Show all events
+      filterEvents();
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+      // Initialize date filter with today's date
+      const showAllBtn = document.getElementById("showAllBtn");
+      const dateFilter = document.getElementById("dateFilterin");
+      const dateFilterout = document.getElementById("dateFilterout");
+      const searchInput = document.getElementById("searchEvent");
+
+      // Set default date to empty (shows all events)
+      dateFilter.value = '';
+      dateFilterout.value = '';
+
+      // Add event listeners
+      showAllBtn.addEventListener("click", resetFilters);
+      dateFilter.addEventListener("change", filterEvents);
+      dateFilterout.addEventListener("change", filterEvents);
+      searchInput.addEventListener("keyup", filterEvents);
+
+      // Apply initial filter (shows all events)
+      filterEvents();
+
+      // Check if we should show the form after reload
+      if (sessionStorage.getItem('showEventForm') === 'true') {
+        showEventForm();
+        sessionStorage.removeItem('showEventForm');
       }
 
-      function updateHeader() {
-        const now = new Date();
-        const weekdayFull = now.toLocaleDateString('en-GB', {
-          weekday: 'short'
-        }); // e.g. "Thu"
-        const day = now.getDate();
-        const month = now.toLocaleDateString('en-GB', {
-          month: 'long'
-        });
-        const year = now.getFullYear();
-
-        const weekdayDisplay = (weekdayFull === "Thu") ? "Thurs" : weekdayFull;
-
-        const finalDateStr = `${weekdayDisplay} ${day} ${month} ${year}`;
-
-        document.getElementById('greeting').textContent = `${getGreeting()}, ${userName} 👋`;
-        document.getElementById('dateOnly').textContent = `Today, ${finalDateStr}`;
-      }
-
+      // Header initialization
       updateHeader();
       setInterval(updateHeader, 60000);
-    </script>
-    <?php
-    if (isset($_GET['focus']) && $_GET['focus'] === 'today') {
-      $today = date('Y-m-d');
-      // Set the date filter inputs to today's date
-      echo "<script>
+    });
+  </script>
+
+  <script>
+    const userName = "<?php echo htmlspecialchars($_SESSION['username'] ?? 'User'); ?>";
+
+    function getGreeting() {
+      const hour = new Date().getHours();
+      if (hour < 12) return "Good morning";
+      if (hour < 17) return "Good afternoon";
+      return "Good evening";
+    }
+
+    function updateHeader() {
+      const now = new Date();
+      const weekdayFull = now.toLocaleDateString('en-GB', {
+        weekday: 'short'
+      }); // e.g. "Thu"
+      const day = now.getDate();
+      const month = now.toLocaleDateString('en-GB', {
+        month: 'long'
+      });
+      const year = now.getFullYear();
+
+      const weekdayDisplay = (weekdayFull === "Thu") ? "Thurs" : weekdayFull;
+
+      const finalDateStr = `${weekdayDisplay} ${day} ${month} ${year}`;
+
+      document.getElementById('greeting').textContent = `${getGreeting()}, ${userName} 👋`;
+      document.getElementById('dateOnly').textContent = `Today, ${finalDateStr}`;
+    }
+
+    updateHeader();
+    setInterval(updateHeader, 60000);
+  </script>
+  <?php
+  if (isset($_GET['focus']) && $_GET['focus'] === 'today') {
+    $today = date('Y-m-d');
+    // Set the date filter inputs to today's date
+    echo "<script>
         document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('dateFilterin').value = '$today';
             document.getElementById('dateFilterout').value = '$today';
             filterEvents();
         });
     </script>";
-    }
-    ?>
+  }
+  ?>
+
 </body>
 
 </html>
