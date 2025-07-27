@@ -8,6 +8,8 @@ $conn = $db->connect();
 $calendar = new Calendar($conn);
 $userid = $_SESSION['user_id'];
 $events = $calendar->getAll($userid);
+
+
 ?>
 
 <!DOCTYPE html>
@@ -474,6 +476,19 @@ $events = $calendar->getAll($userid);
       updateHeader();
       setInterval(updateHeader, 60000);
     </script>
+    <?php
+    if (isset($_GET['focus']) && $_GET['focus'] === 'today') {
+    $today = date('Y-m-d');
+    // Set the date filter inputs to today's date
+    echo "<script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('dateFilterin').value = '$today';
+            document.getElementById('dateFilterout').value = '$today';
+            filterEvents();
+        });
+    </script>";
+}
+    ?>
 </body>
 
 </html>
