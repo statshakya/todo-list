@@ -94,34 +94,21 @@ class Note
     }
 
     // Update an existing note with file handling
-    public function update($id, $title, $content, $file = null)
+    public function update($id, $title, $content, $userid, $file = null)
     {
         try {
             // Get current note data
             $currentNote = $this->getById($id);
             $currentFile = $currentNote['fileupload'] ?? null;
-            $newFile = $currentFile;
-
-            // Handle new file upload if provided
-            if ($file) {
-                $newFile = $this->handleFileUpload($file);
-
-                // Delete old file if it exists and new file was uploaded successfully
-                if ($currentFile && $newFile) {
-                    $fullPath = '../' . $currentFile; // Adjust path as needed
-                    if (file_exists($fullPath)) {
-                        unlink($fullPath);
-                    }
-                }
-            }
+            $newFile = $file ?? $currentFile;
 
             $stmt = $this->conn->prepare("
                 UPDATE {$this->table}
-                SET title = ?, content = ?, fileupload = ?, updated_date = NOW()
+                SET title = ?, content = ?, fileupload = ?, user_id = ?, updated_date = NOW()
                 WHERE id = ?
             ");
 
-            return $stmt->execute([$title, $content, $newFile, $id]);
+            return $stmt->execute([$title, $content, $newFile, $userid, $id]);
         } catch (Exception $e) {
             error_log("Note update failed: " . $e->getMessage());
             return false;

@@ -17,7 +17,7 @@ $userid = $_SESSION['user_id'];
 $action = $_POST['action'] ?? '';
 
 // Helper function to handle file upload
-function handleFileUpload($fileInputName = 'file')
+/*function handleFileUpload($fileInputName = 'file')
 {
     if (isset($_FILES[$fileInputName]) && $_FILES[$fileInputName]['error'] === UPLOAD_ERR_OK) {
         $uploadDir = '../uploads/notes/';
@@ -33,6 +33,34 @@ function handleFileUpload($fileInputName = 'file')
         }
     }
     return null;
+}*/
+
+function handleFileUpload()
+{
+    if (
+        !isset($_FILES['file']) ||
+        $_FILES['file']['error'] === UPLOAD_ERR_NO_FILE
+    ) {
+        return null; // No file uploaded
+    }
+
+    if ($_FILES['file']['error'] !== UPLOAD_ERR_OK) {
+        throw new Exception("File upload error: " . $_FILES['file']['error']);
+    }
+
+    $uploadDir = '../uploads/notes/';
+    if (!is_dir($uploadDir)) {
+        mkdir($uploadDir, 0777, true); // create folder if it doesn't exist
+    }
+
+    $filename = uniqid() . '_' . basename($_FILES['file']['name']);
+    $targetPath = $uploadDir . $filename;
+
+    if (!move_uploaded_file($_FILES['file']['tmp_name'], $targetPath)) {
+        throw new Exception("Failed to save uploaded file.");
+    }
+
+    return 'uploads/notes/' . $filename;
 }
 
 switch ($action) {
@@ -71,17 +99,36 @@ switch ($action) {
         break;
 
     case 'update':
-        $id = $_POST['id'] ?? '';
+
+        $id = $_POST['id'] ?? null;
         $title = $_POST['title'] ?? '';
         $content = $_POST['content'] ?? '';
-        $file = $_FILES['file'] ?? null;
 
-        $success = $note->update($id, $title, $content, $file);
-        echo json_encode([
-            'status' => $success ? 'success' : 'error',
-            'message' => $success ? 'Note updated ✏️' : 'Failed to update note ❌'
-        ]);
+        if (!$id || empty($title) || empty($content)) {
+            echo json_encode([
+                'status' => 'error',
+                'message' => 'Missing ID, title, or content'
+            ]);
+            break;
+        }
+
+        try {
+            $filePath = handleFileUpload();
+            $updated = $note->update($id, $title, $content, $userid, $filePath);
+
+            echo json_encode([
+                'status' => $updated ? 'success' : 'error',
+                'message' => $updated ? 'Note updated ✏️' : 'Failed to update note ❌'
+            ]);
+        } catch (Exception $e) {
+            echo json_encode([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ]);
+        }
+
         break;
+
 
     case 'delete':
         $id = $_POST['id'] ?? '';
