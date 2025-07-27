@@ -199,22 +199,34 @@ $events = $calendar->getAll($userid);
 
   <div class="container mt-4">
     <!-- Search Bar -->
+    
+
     <div class="d-flex align-items-center justify-content-start gap-2 mb-3">
       <button id="showAllBtn" class="btn btn-secondary">All</button>
-      <!-- Date Filter -->
-      <input type="date" id="dateFilterin" class="form-control w-auto">
-      <input type="date" id="dateFilterout" class="form-control w-auto">
-      
+
+      <!-- From Input Group -->
+      <div class="input-group w-50">
+        <span class="input-group-text">From</span>
+        <input type="date" id="dateFilterin" class="form-control">
+      </div>
+
+      <!-- To Input Group -->
+      <div class="input-group w-50">
+        <span class="input-group-text">To</span>
+        <input type="date" id="dateFilterout" class="form-control">
+      </div>
+
       <!-- Search Bar -->
       <input type="text" id="searchEvent" class="form-control" placeholder="Search events...">
     </div>
 
+
     <!-- Event List -->
     <ul class="list-group" id="eventList">
       <?php foreach ($events as $event): ?>
-        <li class="list-group-item d-flex align-items-center justify-content-between" 
-            data-event-id="<?= $event['id'] ?>"
-            data-event-date="<?= $event['event_date'] ?>">
+        <li class="list-group-item d-flex align-items-center justify-content-between"
+          data-event-id="<?= $event['id'] ?>"
+          data-event-date="<?= $event['event_date'] ?>">
           <div>
             <span class="event-title"><?= htmlspecialchars($event['title']) ?></span>
             <small class="event-date">(<?= htmlspecialchars($event['event_date']) ?>)</small>
@@ -244,7 +256,7 @@ $events = $calendar->getAll($userid);
 
     <script>
       let currentEventId = null;
-      
+
       function showEventForm() {
         const formBox = document.getElementById("event-form-box");
         const isHidden = formBox.style.display === "none" || formBox.style.display === "";
@@ -272,54 +284,55 @@ $events = $calendar->getAll($userid);
         }
       }
 
-  function saveEvent() {
-    const titleInput = document.getElementById("eventInput");
-    const dateInput = document.getElementById("eventDate");
-    
-    if (!titleInput || !dateInput) {
-        alert("Form elements not found.");
-        return;
-    }
+      function saveEvent() {
+        const titleInput = document.getElementById("eventInput");
+        const dateInput = document.getElementById("eventDate");
 
-    const title = titleInput.value.trim();
-    const date = dateInput.value;
+        if (!titleInput || !dateInput) {
+          alert("Form elements not found.");
+          return;
+        }
 
-    if (!title || !date) {
-        alert("Please fill in all fields.");
-        return;
-    }
+        const title = titleInput.value.trim();
+        const date = dateInput.value;
 
-    const action = currentEventId ? 'update' : 'add';
-    const data = {
-        action: action,
-        title: title,
-        event_date: date,
-        user_id: <?php echo json_encode($_SESSION['user_id'] ?? 0); ?>
-    };
+        if (!title || !date) {
+          alert("Please fill in all fields.");
+          return;
+        }
 
-    if (currentEventId) {
-        data.id = currentEventId;
-    }
+        const action = currentEventId ? 'update' : 'add';
+        const data = {
+          action: action,
+          title: title,
+          event_date: date,
+          user_id: <?php echo json_encode($_SESSION['user_id'] ?? 0); ?>
+        };
 
-    $.ajax({
-        url: "ajax/calendar.php",
-        type: "POST",
-        data: data,
-        success: function(response) {
+        if (currentEventId) {
+          data.id = currentEventId;
+        }
+
+        $.ajax({
+          url: "ajax/calendar.php",
+          type: "POST",
+          data: data,
+          success: function(response) {
             if (response.status === 'success') {
-                alert(response.message);
-                location.reload();
+              alert(response.message);
+              location.reload();
             } else {
-                alert(response.message || "Operation failed");
+              alert(response.message || "Operation failed");
             }
-        },
-        error: function(xhr, status, error) {
+          },
+          error: function(xhr, status, error) {
             alert("Error: " + error);
             console.error(xhr.responseText);
-        }
-    });
-}
-function editEvent(button) {
+          }
+        });
+      }
+
+      function editEvent(button) {
         const listItem = button.closest('li');
         const eventId = listItem.getAttribute('data-event-id');
         const eventTitle = listItem.querySelector('.event-title').textContent;
@@ -329,7 +342,7 @@ function editEvent(button) {
         document.getElementById("eventDate").value = eventDate;
         document.getElementById("formTitle").textContent = "Edit Event";
         document.getElementById("saveEventBtn").textContent = "Update Event";
-        
+
         currentEventId = eventId;
         toggleForm(true);
       }
@@ -357,76 +370,76 @@ function editEvent(button) {
         });
       }
 
-function filterEvents() {
-    const searchInput = document.getElementById("searchEvent");
-    const dateIn = document.getElementById("dateFilterin");
-    const dateOut = document.getElementById("dateFilterout");
-    const eventList = document.getElementById("eventList");
-    
-    const searchTerm = searchInput.value.trim().toLowerCase();
-    const dateInValue = dateIn.value;
-    const dateOutValue = dateOut.value;
-    const events = eventList.querySelectorAll("li");
+      function filterEvents() {
+        const searchInput = document.getElementById("searchEvent");
+        const dateIn = document.getElementById("dateFilterin");
+        const dateOut = document.getElementById("dateFilterout");
+        const eventList = document.getElementById("eventList");
 
-    events.forEach(event => {
-        const eventTitle = event.querySelector(".event-title").textContent.toLowerCase();
-        const eventDate = event.getAttribute("data-event-date");
-        
-        // Search filter
-        const matchesSearch = searchTerm === '' || eventTitle.includes(searchTerm);
-        
-        // Date range filter
-        const matchesDate = (dateInValue === '' || eventDate >= dateInValue) && 
-                          (dateOutValue === '' || eventDate <= dateOutValue);
-        
-        // Show/hide
-            if (matchesSearch && matchesDate) {
+        const searchTerm = searchInput.value.trim().toLowerCase();
+        const dateInValue = dateIn.value;
+        const dateOutValue = dateOut.value;
+        const events = eventList.querySelectorAll("li");
+
+        events.forEach(event => {
+          const eventTitle = event.querySelector(".event-title").textContent.toLowerCase();
+          const eventDate = event.getAttribute("data-event-date");
+
+          // Search filter
+          const matchesSearch = searchTerm === '' || eventTitle.includes(searchTerm);
+
+          // Date range filter
+          const matchesDate = (dateInValue === '' || eventDate >= dateInValue) &&
+            (dateOutValue === '' || eventDate <= dateOutValue);
+
+          // Show/hide
+          if (matchesSearch && matchesDate) {
             event.style.cssText = "display: flex !important";
-        } else {
+          } else {
             event.style.cssText = "display: none !important";
+          }
+        });
+      }
+
+      function resetFilters() {
+        // Clear both filters
+        document.getElementById("dateFilterin").value = '';
+        document.getElementById("dateFilterout").value = '';
+        document.getElementById("searchEvent").value = '';
+        // Show all events
+        filterEvents();
+      }
+
+      document.addEventListener("DOMContentLoaded", function() {
+        // Initialize date filter with today's date
+        const showAllBtn = document.getElementById("showAllBtn");
+        const dateFilter = document.getElementById("dateFilterin");
+        const dateFilterout = document.getElementById("dateFilterout");
+        const searchInput = document.getElementById("searchEvent");
+
+        // Set default date to empty (shows all events)
+        dateFilter.value = '';
+        dateFilterout.value = '';
+
+        // Add event listeners
+        showAllBtn.addEventListener("click", resetFilters);
+        dateFilter.addEventListener("change", filterEvents);
+        dateFilterout.addEventListener("change", filterEvents);
+        searchInput.addEventListener("keyup", filterEvents);
+
+        // Apply initial filter (shows all events)
+        filterEvents();
+
+        // Check if we should show the form after reload
+        if (sessionStorage.getItem('showEventForm') === 'true') {
+          showEventForm();
+          sessionStorage.removeItem('showEventForm');
         }
-    });
-}
 
-function resetFilters() {
-    // Clear both filters
-    document.getElementById("dateFilterin").value = '';
-    document.getElementById("dateFilterout").value = '';
-    document.getElementById("searchEvent").value = '';
-    // Show all events
-    filterEvents();
-}
-
-     document.addEventListener("DOMContentLoaded", function() {
-    // Initialize date filter with today's date
-     const showAllBtn = document.getElementById("showAllBtn");
-    const dateFilter = document.getElementById("dateFilterin");
-    const dateFilterout = document.getElementById("dateFilterout");
-    const searchInput = document.getElementById("searchEvent");
-    
-    // Set default date to empty (shows all events)
-    dateFilter.value = '';
-    dateFilterout.value = '';
-    
-    // Add event listeners
-    showAllBtn.addEventListener("click", resetFilters);
-    dateFilter.addEventListener("change", filterEvents);
-    dateFilterout.addEventListener("change", filterEvents);
-    searchInput.addEventListener("keyup", filterEvents);
-    
-    // Apply initial filter (shows all events)
-    filterEvents();
-    
-    // Check if we should show the form after reload
-    if (sessionStorage.getItem('showEventForm') === 'true') {
-        showEventForm();
-        sessionStorage.removeItem('showEventForm');
-    }
-    
-    // Header initialization
-    updateHeader();
-    setInterval(updateHeader, 60000);
-});
+        // Header initialization
+        updateHeader();
+        setInterval(updateHeader, 60000);
+      });
     </script>
 
     <script>
@@ -462,4 +475,5 @@ function resetFilters() {
       setInterval(updateHeader, 60000);
     </script>
 </body>
+
 </html>

@@ -510,9 +510,9 @@ $tododones = $todo->getAll_active($userid);
 
       function getGreeting() {
         const hour = new Date().getHours();
-        if (hour < 12) return "Good morning";
-        if (hour < 17) return "Good afternoon";
-        return "Good evening";
+        if (hour < 12) return "Good Morning";
+        if (hour < 17) return "Good Afternoon";
+        return "Good Evening";
       }
 
       function updateHeader() {
