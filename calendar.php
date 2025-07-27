@@ -163,7 +163,7 @@ $events = $calendar->getAll($userid);
 
   <nav class="navbar navbar-expand-lg" style="width: 100%;">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#">PlanPal</a>
+      <a class="navbar-brand" href="dashboard.php">PlanPal</a>
       <div class="collapse navbar-collapse justify-content-end">
         <ul class="navbar-nav">
           <li class="nav-item dropdown">

@@ -161,11 +161,11 @@ $tododones = $todo->getAll_active($userid);
 
   <nav class="navbar navbar-expand-lg" style="width: 100%;">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#">PlanPal</a>
+      <a class="navbar-brand" href="dashboard.php">PlanPal</a>
       <div class="collapse navbar-collapse justify-content-end">
         <ul class="navbar-nav">
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+            <a class="nav-link dropdown-toggle" href="dashboard.php" id="userDropdown" role="button" data-bs-toggle="dropdown">
               <?php echo htmlspecialchars($_SESSION['username'] ?? 'User'); ?>
             </a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">

@@ -253,7 +253,7 @@ $todaysEventsCount = count($todaysEvents);
       <div class="collapse navbar-collapse justify-content-end">
         <ul class="navbar-nav">
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+            <a class="nav-link dropdown-toggle" href="dashboard.php" id="userDropdown" role="button" data-bs-toggle="dropdown">
               <?php echo htmlspecialchars($_SESSION['username'] ?? 'User'); ?>
             </a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
@@ -285,46 +285,49 @@ $todaysEventsCount = count($todaysEvents);
   </div>
 
     <div class="container mt-4">
-    <h3 class="mb-4">Your Dashboard</h3>
+    <h3 class="mb-4">Your Day at a Glance!🌸</h3>
     
     <div class="dashboard-row">
       
-      <div class="dashboard-card">
-        <div class="card-icon">📝</div>
-        <div class="card-count"><?= $todoCount ?></div>
-        <h4 class="card-title">Tasks</h4>
-        
-        <div class="progress-container">
-          <div class="progress-bar" style="width: <?= $todoCount > 0 ? round(($completedCount/$todoCount)*100) : 0 ?>%"></div>
-        </div>
-        
-        <div class="d-flex justify-content-between mt-2">
-          <span class="card-subtext">✅ <?= $completedCount ?> completed</span>
-          <span class="card-subtext">⏳ <?= $pendingCount ?> pending</span>
-        </div>
-        
-        <a href="index.php" class="card-link">Manage Todos →</a>
-      </div>
+      <div class="dashboard-card" onclick="location.href='index.php'" style="cursor: pointer;">
+  <div class="card-icon">📝</div>
+  <div class="card-count"><?= $todoCount ?></div>
+  <h4 class="card-title">Tasks</h4>
+  
+  <div class="progress-container">
+    <div class="progress-bar" style="width: <?= $todoCount > 0 ? round(($completedCount/$todoCount)*100) : 0 ?>%"></div>
+  </div>
+  
+  <div class="d-flex justify-content-between mt-2">
+    <span class="card-subtext">✅ <?= $completedCount ?> completed</span>
+    <span class="card-subtext">⏳ <?= $pendingCount ?> pending</span>
+  </div>
+  
+  <div class="card-link">Manage Todos →</div>
+</div>
+
       
       
-      <div class="dashboard-card">
-        <div class="card-icon">📒</div>
-        <div class="card-count"><?= $notesCount ?></div>
-        <h4 class="card-title">Notes</h4>
-        <p class="card-subtext">Last updated: <?= $notesCount > 0 ? 'Recently' : 'Never' ?></p>
-        <a href="notes.php" class="card-link">View Notes →</a>
-      </div>
+      <div class="dashboard-card" onclick="location.href='notes.php'" style="cursor: pointer;">
+  <div class="card-icon">📒</div>
+  <div class="card-count"><?= $notesCount ?></div>
+  <h4 class="card-title">Notes</h4>
+  <p class="card-subtext">Last updated: <?= $notesCount > 0 ? 'Recently' : 'Never' ?></p>
+  <div class="card-link">View Notes →</div>
+</div>
       
-      
-      <div class="dashboard-card">
-        <div class="card-icon">📅</div>
-        <div class="card-count"><?= $eventsCount ?></div>
-        <h4 class="card-title">Events
-          <?php if ($todaysEventsCount > 0): ?>
-            <span class="today-badge"><?= $todaysEventsCount ?> today</span>
-          <?php endif; ?>
-        </h4>
-        
+     <div class="dashboard-card" onclick="location.href='calendar.php'" style="cursor: pointer;">
+  <div class="card-icon">📅</div>
+  <div class="card-count"><?= $eventsCount ?></div>
+  <h4 class="card-title">
+    Events
+    <?php if ($todaysEventsCount > 0): ?>
+      <span class="today-badge"><?= $todaysEventsCount ?> today</span>
+    <?php endif; ?>
+  </h4>
+  <div class="card-link">View Events →</div>
+</div>
+       
         <?php if ($todaysEventsCount > 0): ?>
           <p class="card-subtext">You have <?= $todaysEventsCount ?> event(s) today</p>
           <a href="calendar.php?focus=today" class="card-link">View Today's Events →</a>

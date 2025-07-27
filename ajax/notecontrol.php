@@ -5,7 +5,7 @@ require_once '../model/note.php';
 
 // Check if user is logged in
 if (!isset($_SESSION['user_id'])) {
-    echo json_encode(['status' => 'error', 'message' => 'Not logged in']);
+    echo json_encode(['status' => 'error', 'message' => 'Not logged in 🔒']);
     exit;
 }
 
@@ -35,7 +35,6 @@ function handleFileUpload($fileInputName = 'file')
     return null;
 }
 
-
 switch ($action) {
     case 'create':
         $title = $_POST['title'] ?? '';
@@ -44,7 +43,7 @@ switch ($action) {
         if (empty($title) || empty($content)) {
             echo json_encode([
                 'status' => 'error',
-                'message' => 'Title and content are required'
+                'message' => 'Title and content are required ✏️'
             ]);
             break;
         }
@@ -55,13 +54,13 @@ switch ($action) {
 
             echo json_encode([
                 'status' => $success ? 'success' : 'error',
-                'message' => $success ? 'Note created' : 'Failed to create note',
+                'message' => $success ? 'Note created 📝' : 'Failed to create note ❌',
                 'file' => $filePath
             ]);
         } catch (Exception $e) {
             echo json_encode([
                 'status' => 'error',
-                'message' => $e->getMessage()
+                'message' => $e->getMessage() . ' ⚠️'
             ]);
         }
         break;
@@ -72,20 +71,23 @@ switch ($action) {
         break;
 
     case 'update':
-
         $id = $_POST['id'] ?? '';
         $title = $_POST['title'] ?? '';
         $content = $_POST['content'] ?? '';
         $file = $_FILES['file'] ?? null;
+
         $success = $note->update($id, $title, $content, $file);
-        echo json_encode(['status' => $success ? 'success' : 'error']);
+        echo json_encode([
+            'status' => $success ? 'success' : 'error',
+            'message' => $success ? 'Note updated ✏️' : 'Failed to update note ❌'
+        ]);
         break;
 
     case 'delete':
         $id = $_POST['id'] ?? '';
 
         if (empty($id)) {
-            echo json_encode(['status' => 'error', 'message' => 'Missing note ID']);
+            echo json_encode(['status' => 'error', 'message' => 'Missing note ID ❗']);
             exit;
         }
 
@@ -93,17 +95,20 @@ switch ($action) {
 
         echo json_encode([
             'status' => $success ? 'success' : 'error',
-            'message' => $success ? 'Note deleted successfully' : 'Failed to delete note'
+            'message' => $success ? 'Note deleted 🗑️' : 'Failed to delete note ❌'
         ]);
         break;
 
     case 'deletefile':
         $id = $_POST['id'] ?? '';
         $success = $note->deleteFileOnly($id);
-        echo json_encode(['status' => $success ? 'success' : 'error']);
+        echo json_encode([
+            'status' => $success ? 'success' : 'error',
+            'message' => $success ? 'File removed 🧹' : 'Failed to remove file ❌'
+        ]);
         break;
 
     default:
-        echo json_encode(['status' => 'error', 'message' => 'Invalid action']);
+        echo json_encode(['status' => 'error', 'message' => 'Invalid action 🚫']);
         break;
 }
