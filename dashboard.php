@@ -288,7 +288,7 @@ $todaysEventsCount = count($todaysEvents);
     <h3 class="mb-4">Your Dashboard</h3>
     
     <div class="dashboard-row">
-      <!-- Todo Card - Enhanced -->
+      
       <div class="dashboard-card">
         <div class="card-icon">📝</div>
         <div class="card-count"><?= $todoCount ?></div>
@@ -306,7 +306,7 @@ $todaysEventsCount = count($todaysEvents);
         <a href="index.php" class="card-link">Manage Todos →</a>
       </div>
       
-      <!-- Notes Card -->
+      
       <div class="dashboard-card">
         <div class="card-icon">📒</div>
         <div class="card-count"><?= $notesCount ?></div>
@@ -315,7 +315,7 @@ $todaysEventsCount = count($todaysEvents);
         <a href="notes.php" class="card-link">View Notes →</a>
       </div>
       
-      <!-- Calendar Card - Enhanced -->
+      
       <div class="dashboard-card">
         <div class="card-icon">📅</div>
         <div class="card-count"><?= $eventsCount ?></div>
