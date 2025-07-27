@@ -16,15 +16,22 @@ $notesdata = $notes->getAll($userid);
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#062e3f" />
+  <meta name="theme-color" content="#E4C3F5" />
   <meta name="description" content="Your personal notes and file vault in PlanPal." />
 
-  <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300&display=swap" rel="stylesheet">
+  <!-- Fonts and Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Caveat&family=Work+Sans:wght@300&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0-2/css/all.min.css" integrity="sha256-46r060N2LrChLLb5zowXQ72/iKKNiw/lAmygmHExk/o=" crossorigin="anonymous" />
-  <link rel="shortcut icon" type="image/png" href="assets/favicon.png" />
-  <link rel="stylesheet" href="CSS/main.css" />
-  <link rel="stylesheet" href="CSS/corner.css" />
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+  <!-- Favicon -->
+  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3468/3468371.png" type="image/x-icon" />
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="CSS/main.css">
+  <link rel="stylesheet" href="CSS/corner.css">
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
   <title>Notes | PlanPal</title>
 
@@ -47,7 +54,7 @@ $notesdata = $notes->getAll($userid);
 
     .dropdown-menu {
       background-color: #fff0fc;
-      border: 1px solid rgb(221, 195, 243);
+      border: 1px solidrgb(221, 195, 243);
     }
 
     .dropdown-item {
@@ -88,7 +95,7 @@ $notesdata = $notes->getAll($userid);
       box-shadow: 0 5px 12px rgba(0, 0, 0, 0.2);
     }
 
-    .event-form-box {
+    .note-form-box {
       position: fixed;
       bottom: 90px;
       left: 50%;
@@ -98,14 +105,14 @@ $notesdata = $notes->getAll($userid);
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
       padding: 20px;
       width: 90%;
-      max-width: 350px;
+      max-width: 400px;
       display: none;
       z-index: 1000;
     }
 
-    .event-form-box input,
-    .event-form-box select,
-    .event-form-box button {
+    .note-form-box input,
+    .note-form-box textarea,
+    .note-form-box button {
       display: block;
       width: 100%;
       margin: 10px 0;
@@ -114,18 +121,14 @@ $notesdata = $notes->getAll($userid);
       border: 1px solid #ccc;
     }
 
-    .event-form-box button {
+    .note-form-box button {
       background-color: #7c3aed;
       color: white;
       border: none;
       cursor: pointer;
     }
 
-    .event-list {
-      padding: 20px;
-    }
-
-    .event-item {
+    .note-item {
       background: white;
       margin-bottom: 10px;
       padding: 15px;
@@ -134,25 +137,35 @@ $notesdata = $notes->getAll($userid);
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     }
 
-    .event-item small {
+    .note-item small {
       color: gray;
     }
+
+    .note-image {
+      width: 100px;
+      height: auto;
+      object-fit: cover;
+      border-radius: 8px;
+      flex-shrink: 0;
+      max-width: 100%;
+    }
+
+    .note-text p {
+      overflow-y: auto;
+      max-height: 150px;
+    }
+
 
     .bg-af8ece {
       background-color: #af8ece !important;
       border: none !important;
-    }
-
-    .event-date {
-      color: #7c3aed;
-      font-weight: bold;
     }
   </style>
 </head>
 
 <body>
 
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark" style="width:100%;">
+  <nav class="navbar navbar-expand-lg" style="width: 100%;">
     <div class="container-fluid">
       <a class="navbar-brand" href="#">PlanPal</a>
       <div class="collapse navbar-collapse justify-content-end">
@@ -180,219 +193,180 @@ $notesdata = $notes->getAll($userid);
     </div>
   </nav>
 
-  <div class="container mt-4">
-    <h2>Your Notes</h2>
-
-    <!-- Notes Form -->
-    <form id="note-form" class="mb-3" enctype="multipart/form-data">
-      <div class="row">
-        <input type="hidden" name="note_id" id="note_id">
-        <input type="text" class="form-control mb-2" id="note-title" name="title" placeholder="Note title" required>
-        <textarea class="form-control mb-2" id="note-content" name="content" rows="3" placeholder="Write your note..." required></textarea>
-        <div class="col-md-4 mb-3 note-item mt-4" enctype="multipart/form-data">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">Upload File</h5>
-              <input type="file" name="file" id="file-input" class="form-control mb-2">
-              <div id="upload-result" class="mt-2"></div>
-            </div>
-          </div>
-        </div>
-        <button type="submit" class="btn btn-primary">Save Note</button>
-      </div>
-    </form>
-
-    <!-- Notes Display -->
-    <div id="notes-list" class="row">
-      <h2>All notes</h2>
-      <div id="myUnOrdList">
-        <ul class="todo-list">
-          <?php
-
-          if (!empty($notesdata)) {
-            foreach ($notesdata as $notess):
-          ?>
-              <div class="todo standard-todo" data-id="<?= htmlspecialchars($notess['id']) ?>">
-                <a class="edit-btn standard-button" href="edit-note.php?id=<?= $notess['id'] ?>"><i class="fas fa-edit"></i></a>
-                <li class="todo-item" style="color:aliceblue;"><?= htmlspecialchars($notess['title']) ?></li>
-                <button class="delete-btn standard-button delete-note" data-id="<?= $notess['id'] ?>"><i class="fas fa-trash"></i></button>
-              </div>
-          <?php endforeach;
-          } else {
-            echo '<div class="todo standard-todo"><li class="todo-item" style="color:aliceblue;">No tasks available.</li></div>';
-          } ?>
-        </ul>
-      </div>
-    </div>
-
-    <!-- File Upload styled like a note card -->
-
+  <!-- Header Section -->
+  <div style="padding: 10px 20px; background-color: #fff;">
+    <h2 style="color: #333333; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin-bottom: 0;" id="greeting">
+      <!-- Greeting inserted here -->
+    </h2>
+    <p style="color: #555555; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 1rem;" id="dateOnly">
+      <!-- Date inserted here -->
+    </p>
   </div>
 
-  <p><span id="datetime"></span></p>
-  <script src="JS/time.js"></script>
+  <div class="container mt-4">
+    <!-- Search Bar -->
+    <div class="d-flex align-items-center justify-content-start gap-2 mb-3">
+      <!-- Existing Search Bar -->
+      <input type="text" id="searchTask" class="form-control" placeholder="Search notes...">
+    </div>
+
+    <div class="row" id="notes-list">
+      <?php foreach ($notesdata as $note): ?>
+        <div class="col-md-4">
+          <div class="note-item d-flex align-items-start">
+            <div class="note-text me-3">
+              <h5><?= htmlspecialchars($note['title']) ?></h5>
+              <p><?= nl2br(htmlspecialchars($note['content'])) ?></p>
+              <div class="d-flex mt-2" style="gap: 12px;">
+                <a href="edit-note.php?id=<?= $note['id'] ?>" class="btn btn-sm btn-primary">Edit</a>
+                <button class="btn btn-sm btn-danger delete-note" data-id="<?= $note['id'] ?>">Delete</button>
+              </div>
+            </div>
+            <?php if (!empty($note['fileupload']) && file_exists($note['fileupload'])): ?>
+              <img src="<?= htmlspecialchars($note['fileupload']) ?>" alt="Note Image" class="note-image ms-auto">
+            <?php endif; ?>
+          </div>
+        </div>
+      <?php endforeach; ?>
+    </div>
+
+
+
+    <!-- Floating Form -->
+    <div id="note-form-box" class="note-form-box">
+      <h3 id="formTitle">Create New Note</h3>
+      <input type="hidden" id="note_id">
+
+      <input type="text" id="note-title" class="form-control mb-3" placeholder="Note Title">
+
+      <textarea id="note-content" class="form-control mb-3" rows="4" placeholder="Write your note..."></textarea>
+
+      <!-- File Upload Section -->
+      <div class="mb-3">
+        <label for="file-input" class="form-label"><strong>Upload Image</strong></label>
+        <input type="file" name="file" id="file-input" class="form-control">
+        <div id="upload-result" class="form-text mt-2 text-muted"></div>
+      </div>
+
+      <button onclick="saveNote()" id="saveNoteBtn" class="btn btn-success mt-2">Save Note</button>
+    </div>
+
+
+    <!-- Floating Button -->
+    <button class="floating-btn" onclick="toggleNoteForm()">Create a Note +</button>
+  </div>
+
   <script src="js/jquery.min.js"></script>
-  <script src="js/jquery.validate.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-  <script type="text/javascript">
-    jQuery(document).ready(function($) {
+  <script>
+    const userName = "<?php echo htmlspecialchars($_SESSION['username'] ?? 'User'); ?>";
 
-      $(document).ready(function() {
-        // Initialize form validation
-        $('#note-form').validate({
-          errorElement: 'span',
-          errorClass: 'validate-has-error',
-          rules: {
-            title: {
-              required: true,
-              minlength: 2
-            },
-            content: {
-              required: true,
-              minlength: 5
-            }
-          },
-          messages: {
-            title: {
-              required: "Note title is required.",
-              minlength: "Title must be at least 2 characters"
-            },
-            content: {
-              required: "Note content is required.",
-              minlength: "Content must be at least 5 characters"
-            }
-          },
-          submitHandler: function(form) {
-            // Create FormData object from the form
-            var formData = new FormData(form);
+    function getGreeting() {
+      const hour = new Date().getHours();
+      if (hour < 12) return "Good Morning";
+      if (hour < 17) return "Good Afternoon";
+      return "Good Evening";
+    }
 
-            // Determine if this is a create or update action
-            var noteId = $('#note_id').val();
-            var fileInput = $('#file-input')[0];
-            if (fileInput.files.length > 0) {
-              formData.append('file', fileInput.files[0]);
-            }
-            var actionType = noteId ? 'update' : 'create';
-
-            // Add the action to the form data
-            formData.append('action', actionType);
-
-            // If updating, include the note ID
-            if (noteId) {
-              formData.append('id', noteId);
-            }
-
-            // Disable submit button and show loading state
-            $("button[type='submit']").prop("disabled", true).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Saving...');
-
-            // Show upload status
-            $('#upload-result').html('<div class="alert alert-info">Saving your note...</div>');
-
-            // Make the AJAX request
-            $.ajax({
-              type: "POST",
-              url: "ajax/notecontrol.php",
-              data: formData,
-              processData: false, // Required for FormData
-              contentType: false, // Required for FormData
-              dataType: 'json', // Expect JSON response
-              success: function(response) {
-                // Re-enable submit button
-                $("button[type='submit']").prop("disabled", false).html('Save Note');
-
-                // Check if response is valid
-                if (response && response.status) {
-                  if (response.status === 'success') {
-                    // Show success message
-                    var successMsg = 'Note ' + (actionType === 'create' ? 'created' : 'updated') + ' successfully!';
-                    $('#upload-result').html('<div class="alert alert-success">' + successMsg + '</div>');
-
-                    // Reset form if creating new note
-                    if (actionType === 'create') {
-                      $('#note-form')[0].reset();
-                      $('#note_id').val('');
-                    }
-
-                    // Reload page after 1.5 seconds
-                    setTimeout(function() {
-                      if (response.redirect) {
-                        window.location.href = response.redirect;
-                      } else {
-                        location.reload();
-                      }
-                    }, 1500);
-                  } else {
-                    // Show error message from server
-                    var errorMsg = response.message || 'An error occurred while saving the note';
-                    $('#upload-result').html('<div class="alert alert-danger">' + errorMsg + '</div>');
-                  }
-                } else {
-                  // Invalid response format
-                  $('#upload-result').html('<div class="alert alert-danger">Invalid server response</div>');
-                }
-              },
-              error: function(xhr, status, error) {
-                // Re-enable submit button
-                $("button[type='submit']").prop("disabled", false).html('Save Note');
-
-                // Show error message
-                var errorMsg = "Error: ";
-                if (xhr.responseJSON && xhr.responseJSON.message) {
-                  errorMsg += xhr.responseJSON.message;
-                } else if (xhr.responseText) {
-                  errorMsg += xhr.responseText;
-                } else {
-                  errorMsg += "Could not connect to server";
-                }
-
-                $('#upload-result').html('<div class="alert alert-danger">' + errorMsg + '</div>');
-
-                // Log error to console
-                console.error("AJAX Error:", status, error, xhr.responseText);
-              }
-            });
-
-            return false; // Prevent default form submission
-          }
-        });
-
-        // Delete note handler (assuming you have delete buttons with class 'delete-note')
-        $(document).on('click', '.delete-note', function(e) {
-          e.preventDefault();
-          var noteId = $(this).data('id');
-
-          if (confirm('Are you sure you want to delete this note?')) {
-            $.ajax({
-              type: "POST",
-              url: "ajax/notecontrol.php",
-              data: {
-                action: 'delete',
-                id: noteId
-              },
-              dataType: 'json',
-              success: function(response) {
-                if (response.status === 'success') {
-                  // Remove note from UI or reload page
-                  $('[data-note-id="' + noteId + '"]').fadeOut(300, function() {
-                    $(this).remove();
-                  });
-                  // Or simply reload:
-                  // location.reload();
-                } else {
-                  alert('Error: ' + (response.message || 'Failed to delete note'));
-                }
-              },
-              error: function(xhr) {
-                alert('Error: ' + (xhr.responseJSON?.message || 'Server error'));
-              }
-            });
-          }
-        });
+    function updateHeader() {
+      const now = new Date();
+      const weekdayFull = now.toLocaleDateString('en-GB', {
+        weekday: 'short'
       });
+      const day = now.getDate();
+      const month = now.toLocaleDateString('en-GB', {
+        month: 'long'
+      });
+      const year = now.getFullYear();
+      const finalDateStr = `${weekdayFull} ${day} ${month} ${year}`;
+      document.getElementById('greeting').textContent = `${getGreeting()}, ${userName} 👋`;
+      document.getElementById('dateOnly').textContent = `Today, ${finalDateStr}`;
+    }
+
+    updateHeader();
+    setInterval(updateHeader, 60000);
+
+    let currentNoteId = null;
+
+    function toggleNoteForm(forceShow = false) {
+      const formBox = document.getElementById("note-form-box");
+      const isVisible = formBox.style.display === "block";
+      if (!isVisible || forceShow) {
+        formBox.style.display = "block";
+      } else {
+        formBox.style.display = "none";
+      }
+    }
+
+    function saveNote() {
+      const title = document.getElementById("note-title").value.trim();
+      const content = document.getElementById("note-content").value.trim();
+      const id = document.getElementById("note_id").value;
+      const fileInput = document.getElementById("file-input");
+
+      if (!title || !content) {
+        alert("Please fill in all fields.");
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("action", id ? "update" : "create");
+      formData.append("id", id);
+      formData.append("title", title);
+      formData.append("content", content);
+
+      if (fileInput.files.length > 0) {
+        formData.append("file", fileInput.files[0]);
+      }
+
+      $.ajax({
+        type: "POST",
+        url: "ajax/notecontrol.php",
+        data: formData,
+        contentType: false,
+        processData: false,
+        dataType: 'json',
+        success: function(response) {
+          if (response.status === 'success') {
+            location.reload();
+          } else {
+            alert(response.message || "An error occurred.");
+          }
+        },
+        error: function() {
+          alert("Request failed.");
+        }
+      });
+    }
+
+
+    $(document).on('click', '.delete-note', function() {
+      const noteId = $(this).data('id');
+      if (confirm('Are you sure you want to delete this note?')) {
+        $.ajax({
+          type: "POST",
+          url: "ajax/notecontrol.php",
+          data: {
+            action: 'delete',
+            id: noteId
+          },
+          dataType: 'json',
+          success: function(response) {
+            if (response.status === 'success') {
+              alert(response.message);
+              location.reload();
+            } else {
+              alert('Error: ' + (response.message || 'Failed to delete note'));
+            }
+          },
+          error: function() {
+            alert('Server error.');
+          }
+        });
+      }
     });
   </script>
-
 </body>
 
 </html>
