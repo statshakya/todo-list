@@ -22,3 +22,5 @@ CREATE TABLE `tbl_notes` (
 
 ALTER TABLE `tbl_events` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `tbl_notes` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `tbl_notes` CHANGE `fileupload` `fileupload` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL; 

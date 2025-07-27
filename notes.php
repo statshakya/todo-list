@@ -212,13 +212,22 @@ $notesdata = $notes->getAll($userid);
 
     <div class="row" id="notes-list">
       <?php foreach ($notesdata as $note): ?>
-        <div class="col-md-4">
+        <div class="col-md-4 note-card"
+          data-title="<?= htmlspecialchars(strtolower($note['title'])) ?>"
+          data-content="<?= htmlspecialchars(strtolower($note['content'])) ?>">
+
           <div class="note-item d-flex align-items-start">
             <div class="note-text me-3">
               <h5><?= htmlspecialchars($note['title']) ?></h5>
               <p><?= nl2br(htmlspecialchars($note['content'])) ?></p>
               <div class="d-flex mt-2" style="gap: 12px;">
-                <a href="edit-note.php?id=<?= $note['id'] ?>" class="btn btn-sm btn-primary">Edit</a>
+                <button
+                  class="btn btn-sm btn-primary edit-note"
+                  data-id="<?= $note['id'] ?>"
+                  data-title="<?= htmlspecialchars($note['title'], ENT_QUOTES) ?>"
+                  data-content="<?= htmlspecialchars($note['content'], ENT_QUOTES) ?>"
+                  data-file="<?= htmlspecialchars($note['fileupload']) ?>">Edit</button>
+
                 <button class="btn btn-sm btn-danger delete-note" data-id="<?= $note['id'] ?>">Delete</button>
               </div>
             </div>
@@ -329,7 +338,7 @@ $notesdata = $notes->getAll($userid);
         dataType: 'json',
         success: function(response) {
           if (response.status === 'success') {
-             alert(response.message);
+            alert(response.message);
             location.reload();
           } else {
             alert(response.message || "An error occurred.");
@@ -367,7 +376,46 @@ $notesdata = $notes->getAll($userid);
         });
       }
     });
+
+    $(document).on("click", ".edit-note", function() {
+      const id = $(this).data("id");
+      const title = $(this).data("title");
+      const content = $(this).data("content");
+      const file = $(this).data("file");
+
+      $("#note_id").val(id);
+      $("#note-title").val(title);
+      $("#note-content").val(content);
+      $("#formTitle").text("Edit Note");
+
+      // Optional: Show existing image preview
+      if (file) {
+        $("#upload-result").html(`<img src="${file}" alt="Note Image" class="img-thumbnail mt-2" style="max-height: 150px;">`);
+      } else {
+        $("#upload-result").html('');
+      }
+
+      toggleNoteForm(true);
+    });
+
+    document.getElementById('searchTask').addEventListener('input', function() {
+      const searchText = this.value.toLowerCase();
+      const noteCards = document.querySelectorAll('.note-card');
+
+      noteCards.forEach(card => {
+        const title = card.getAttribute('data-title');
+        const content = card.getAttribute('data-content');
+
+        if (title.includes(searchText) || content.includes(searchText)) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    });
   </script>
+
+
 </body>
 
 </html>
