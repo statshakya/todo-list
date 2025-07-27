@@ -1,7 +1,6 @@
 -- SMS 2025-07-24
 ALTER TABLE `tbl_tododata` ADD `type` VARCHAR(50) NOT NULL AFTER `title`; 
 
--- SMS 2025-07-27
 CREATE TABLE `tbl_events` (
   `id` int(11) NOT NULL,
   `title` varchar(255) NOT NULL,
