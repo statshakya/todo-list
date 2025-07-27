@@ -15,6 +15,13 @@ class Todo
         $stmt->execute();
         return $stmt->fetchAll();
     }
+    public function getAll_user($userid = '')
+    {
+        $stmt = $this->conn->prepare("SELECT * FROM {$this->table} WHERE user_id = :userid ORDER BY created_date DESC");
+        $stmt->bindParam(':userid', $userid);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
 
     public function getAll_active($userid = '')
     {

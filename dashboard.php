@@ -14,7 +14,7 @@ $notes = new Note($conn);
 $calendar = new Calendar($conn);
 
 $userid = $_SESSION['user_id'];
-$todoCount = count($todo->getAll($userid));
+$todoCount = count($todo->getAll_user($userid));
 $completedTodos = $todo->getAll_active($userid); // Assuming this returns completed tasks
 $pendingTodos = $todo->getAll_done($userid); 
 
