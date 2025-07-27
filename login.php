@@ -214,7 +214,7 @@ session_start();
 
         <div class="right-panel">
             <div class="form-box">
-                <img src="https://purpledaisydesign.com/wp-content/uploads/2021/05/N-2584-Cute-Baby-Elephant-colored.jpg" alt="Smiling Elephant" class="elephant" />
+                <img src="images/Elephant.png" alt="Smiling Elephant" class="elephant" />
                 <h2>Hello Lovely!</h2>
                 <p>Welcome! Please login</p>
 

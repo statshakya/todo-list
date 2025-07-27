@@ -47,7 +47,6 @@ $todaysEventsCount = count($todaysEvents);
 <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3468/3468371.png" type="image/x-icon" />
 
 <link rel="stylesheet" href="CSS/main.css">
-<link rel="stylesheet" href="CSS/corner.css">
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
@@ -286,12 +285,14 @@ $todaysEventsCount = count($todaysEvents);
     </div>
   </nav>
 
-  <div style="padding: 10px 20px; background-color: #fff;">
+  <div style="padding: 10px 20px; background-color: #fff; width: 100%; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
     <h2 style="color: #333333; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin-bottom: 0;" id="greeting"></h2>
     <p style="color: #555555; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 1rem;" id="dateOnly"></p>
   </div>
 
   <div class="container mt-4">
+    <img src="images/Elephant.png" alt="Smiling Elephant" class="elephant" style="width: 100px;" />
+
     <h3 class="mb-4">Your Day at a Glance!🌸</h3>
 
     <div class="dashboard-row">

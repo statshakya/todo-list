@@ -28,7 +28,6 @@ $events = $calendar->getAll($userid);
 
   <!-- Custom CSS -->
   <link rel="stylesheet" href="CSS/main.css">
-  <link rel="stylesheet" href="CSS/corner.css">
 
   <!-- Bootstrap -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -210,7 +209,7 @@ $events = $calendar->getAll($userid);
   </nav>
 
   <!-- Header Section -->
-  <div style="padding: 10px 20px; background-color: #fff;">
+ <div style="width: 100%; padding: 15px 20px; background-color: #fff; text-align: left; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
     <h2 style="color: #333333; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin-bottom: 0;" id="greeting">
       <!-- Greeting inserted here -->
     </h2>

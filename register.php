@@ -111,8 +111,8 @@ require_once 'model/tododata.php';
     }
 
     button:hover {
-      background-color: #9c7fc6cc;
-      box-shadow: 0 0 10px 2px #f7c6c7aa;
+      background-color: #efa5fdff;
+      box-shadow: 0 0 10px 2px #f3e7f5ff;
     }
 
     .login-link {

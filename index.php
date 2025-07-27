@@ -29,7 +29,6 @@ $tododones = $todo->getAll_active($userid);
 
   <!-- Custom CSS -->
   <link rel="stylesheet" href="CSS/main.css">
-  <link rel="stylesheet" href="CSS/corner.css">
 
   <!-- Bootstrap -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -205,15 +204,11 @@ $tododones = $todo->getAll_active($userid);
     </div>
   </nav>
 
-  <!-- Header Section -->
-  <div style="padding: 10px 20px; background-color: #fff;">
-    <h2 style="color: #333333; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin-bottom: 0;" id="greeting">
-      <!-- Greeting inserted here -->
-    </h2>
-    <p style="color: #555555; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 1rem;" id="dateOnly">
-      <!-- Date inserted here -->
-    </p>
-  </div>
+ <!-- Greeting Bar -->
+<div style="width: 100%; padding: 15px 20px; background-color: #fff; text-align: left; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+  <h2 id="greeting" style="margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #333;"></h2>
+  <p id="dateOnly" style="margin: 0; font-size: 0.95rem; color: #666;"></p>
+</div>
 
   <div class="container mt-4">
     <!-- Search Bar -->
