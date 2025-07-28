@@ -107,14 +107,14 @@ $currentUser = $user->getById($_SESSION['user_id']); // fetch current data
     background-color: #af8ece;
     color: black;
     border: 1px solid #af8ece;
-    width: 91%!important;
-    
-    
+    width: 91% !important;
+
+
   }
-  
+
   .btn-lavender:hover {
     background-color: #efa5fdff;
-    width: 91%!important;
+    width: 91% !important;
   }
 
   .navbar-brand {
@@ -190,7 +190,7 @@ $currentUser = $user->getById($_SESSION['user_id']); // fetch current data
     <h2>Your Profile</h2>
   </div><b></b>
   <!-- #region -->
-  <div class="container mt-5">
+  <div class="container mt-5 mb-5">
     <div class="row justify-content-center">
       <div class="col-md-6">
         <div class="profile-card">
