@@ -189,6 +189,7 @@ require_once 'model/tododata.php';
       margin-bottom: 10px;
       display: block;
     }
+    
   </style>
 </head>
 
@@ -221,9 +222,9 @@ require_once 'model/tododata.php';
         </div>
 
         <div id="register_msg"></div>
-
+<div class="form-group">
         <button type="submit" id="register-submit">Register</button>
-
+</div>
         <div class="login-link">
           Already registered? <a href="login.php">Login</a>
         </div>

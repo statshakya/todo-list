@@ -107,12 +107,14 @@ $currentUser = $user->getById($_SESSION['user_id']); // fetch current data
     background-color: #af8ece;
     color: black;
     border: 1px solid #af8ece;
+    width: 91%!important;
     
     
   }
-
+  
   .btn-lavender:hover {
     background-color: #efa5fdff;
+    width: 91%!important;
   }
 
   .navbar-brand {
