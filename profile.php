@@ -27,7 +27,7 @@ $currentUser = $user->getById($_SESSION['user_id']); // fetch current data
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0-2/css/all.min.css"
     integrity="sha256-46r060N2LrChLLb5zowXQ72/iKKNiw/lAmygmHExk/o=" crossorigin="anonymous" />
 
-   <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3468/3468371.png" type="image/x-icon" />
+  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3468/3468371.png" type="image/x-icon" />
   <link rel="stylesheet" href="CSS/main.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
@@ -106,7 +106,9 @@ $currentUser = $user->getById($_SESSION['user_id']); // fetch current data
   .btn-lavender {
     background-color: #af8ece;
     color: black;
-    border: none;
+    border: 1px solid #af8ece;
+    
+    
   }
 
   .btn-lavender:hover {

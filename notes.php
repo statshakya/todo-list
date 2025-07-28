@@ -35,17 +35,18 @@ $notesdata = $notes->getAll($userid);
   <title>Notes | PlanPal</title>
 
   <style>
-    html, body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-}
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+    }
 
-body > .container {
-  flex: 1;
-}
+    body>.container {
+      flex: 1;
+    }
 
     body {
       font-family: 'Work Sans', sans-serif;
@@ -75,6 +76,17 @@ body > .container {
     .dropdown-item:hover {
       background-color: #f1dafc;
       color: rgba(61, 60, 63, 1);
+    }
+
+    .btn-lavender {
+      background-color: #af8ece;
+      color: white;
+      border: none;
+    }
+
+    .btn-lavender:hover {
+      background-color: #9d79d3;
+      color: white;
     }
 
     .footer {
@@ -214,7 +226,7 @@ body > .container {
   </nav>
 
   <!-- Header Section -->
- <div style="width: 100%; padding: 15px 20px; background-color: #fff; text-align: left; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+  <div style="width: 100%; padding: 15px 20px; background-color: #fff; text-align: left; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
     <h2 style="color: #333333; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin-bottom: 0;" id="greeting">
       <!-- Greeting inserted here -->
     </h2>
@@ -242,7 +254,7 @@ body > .container {
               <p><?= nl2br(htmlspecialchars($note['content'])) ?></p>
               <div class="d-flex mt-2" style="gap: 12px;">
                 <button
-                  class="btn btn-sm btn-primary edit-note"
+                  class="btn btn-sm btn-lavender edit-note"
                   data-id="<?= $note['id'] ?>"
                   data-title="<?= htmlspecialchars($note['title'], ENT_QUOTES) ?>"
                   data-content="<?= htmlspecialchars($note['content'], ENT_QUOTES) ?>"
