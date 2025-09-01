@@ -1,5 +1,6 @@
 <?php
 header('Content-Type: application/json');
+date_default_timezone_set('Asia/Kathmandu');
 
 require_once '../config/database.php';
 require_once '../model/tododata.php';
@@ -19,6 +20,69 @@ try {
         $action = $_POST['action'] ?? '';
 
         switch ($action) {
+            // Forgot Password
+case 'forgot':
+    $email = trim($_POST['email'] ?? '');
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $response = ['status' => 'error', 'message' => 'Invalid email address ❌'];
+    } else {
+        // Check if user exists
+        $stmt = $conn->prepare("SELECT id, email FROM tbl_users WHERE email = ?");
+        $stmt->execute([$email]);
+        $userRow = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($userRow) {
+            // Generate token + expiry
+            $token = bin2hex(random_bytes(16));
+            $expires = date("Y-m-d H:i:s", strtotime("+1 hour"));
+
+            // Store in password_resets table
+            $conn->prepare("DELETE FROM password_resets WHERE email = ?")->execute([$email]); // cleanup old
+            $stmt = $conn->prepare("INSERT INTO password_resets (email, token, expires_at) VALUES (?, ?, ?)");
+            $stmt->execute([$email, $token, $expires]);
+
+            // Build reset link (for now just return, later send via email)
+            $resetLink = "http://localhost/todo-list/reset_password.php?token=$token";
+
+            $response = [
+                'status' => 'success',
+                'message' => "Password reset link: <a href='$resetLink' target='_blank'>Click here</a> (valid 1 hour)"
+            ];
+        } else {
+            $response = ['status' => 'error', 'message' => 'No account found with this email ❌'];
+        }
+    }
+    break;
+
+// Reset Password
+case 'reset':
+    $token = $_POST['token'] ?? '';
+    $newPassword = $_POST['new_password'] ?? '';
+
+    if (strlen($newPassword) < 4) {
+        $response = ['status' => 'error', 'message' => 'Password must be at least 4 characters ❌'];
+    } else {
+        $stmt = $conn->prepare("SELECT email FROM password_resets WHERE token = ? AND expires_at > NOW()");
+        $stmt->execute([$token]);
+        $resetRow = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($resetRow) {
+            $hashed = password_hash($newPassword, PASSWORD_BCRYPT);
+
+            // Update user password
+            $stmt = $conn->prepare("UPDATE tbl_users SET password = ? WHERE email = ?");
+            $stmt->execute([$hashed, $resetRow['email']]);
+
+            // Remove token after use
+            $conn->prepare("DELETE FROM password_resets WHERE token = ?")->execute([$token]);
+
+            $response = ['status' => 'success', 'message' => 'Password reset successful ✅ You can now log in.'];
+        } else {
+            $response = ['status' => 'error', 'message' => 'Invalid or expired token ❌'];
+        }
+    }
+    break;
+
 
             //  Add Task
             case 'add':

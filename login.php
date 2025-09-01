@@ -230,6 +230,11 @@ session_start();
                         <span>Don't have an account? </span>
                         <a href="register.php">Sign up</a>
                     </div>
+                    <div class="signup-link">
+    
+    <a href="forgot_password.php">Forgot Password?</a>
+</div>
+
                 </form>
             </div>
         </div>
